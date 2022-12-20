@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 12 11:34:54 2022
+Created on Fri Nov 18 12:11:06 2022
 
 @author: Denis
 """
@@ -62,26 +62,25 @@ else:
     print("successfuly imported libraries on centers and classification")
 
 now = datetime.datetime.now
-plt.rcParams.update({'font.size': 66})
+plt.rcParams.update({'font.size': 500})
 plt.rcParams.update({'font.family': 'Cambria'})
 manual_mode = True
 ds = 'TE'
 label = 'QS'
 nclsfier = 2
-fname = 'compare_cv_nn.pdf'
-out_img = True
+fname = 'compare_ib'
 
 # name of the features studied and type of the label ticks for the graphs
 feat_legends = [('intensity','%.1f'),
-                ('triplet intensity','%.3f'),
+                ('triplet intensity','%.2f'),
                 ('line center','%.1f'),
                 ('line width','int'),
-                ('line asymmetry','%.3f'),
+                ('line asymmetry','%.2f'),
                 ('total_continium','int'),
                 ('triplet emission','int'),
-                ('k/h ratio integrated','%.3f'),
-                ('kh ratio max','%.3f'),
-                ('k hight','%.3f'),
+                ('k/h ratio integrated','%.2f'),
+                ('kh ratio max','%.2f'),
+                ('k hight','%.2f'),
                 ('peak ratios','int'),
                 ('peak separation','int')]
 
@@ -149,7 +148,7 @@ classes_and_inclusions_addnoclass = list(zip(
 
 flags = tf.app.flags
 flags.DEFINE_string("model_type", "PCUNet", "name of the model to user ['PCUNet'], ['LSTM'], ..")
-flags.DEFINE_boolean("with_centerloss", True, "whether to add a term in the total loss optimizing the proximity to the centers")
+flags.DEFINE_boolean("with_centerloss", False, "whether to add a term in the total loss optimizing the proximity to the centers")
 flags.DEFINE_boolean("debug", False, "True to use debug mode (1 epoch and 1st item of generator for test)")
 flags.DEFINE_integer("epoch", 200, "Epoch to train [25]")
 flags.DEFINE_integer("batch_size",4, "The size of batch images [4]")
@@ -196,115 +195,6 @@ flags.DEFINE_boolean("frame_res", False, "To frame marginal results in figures")
 # flags.DEFINE_string("feat_legends", '__'.join(feat_legends), "list of the features legends")
 
 FLAGS = flags.FLAGS
-
-def plot_cv(psnr1m, psnr5m, errors, errors5, kcenterm,
-            update=False, lc=None, last=False):
-    if lc == None:
-        label = 'model?'
-        color = 'b'
-        alpha = 1
-    else:
-        try:
-            label, (color, alpha) = lc
-        except:
-            label, color = lc
-            alpha = 1
-    
-    if update:
-        axes = {}
-        i_ax = 0
-        for row in range(4):
-            for col in range(2):
-                axes[row, col] = plt.gcf().axes[i_ax]
-                i_ax += 1
-        ax_leg0 = plt.gcf().axes[i_ax]
-        ax_leg1 = plt.gcf().axes[i_ax+1]
-        ax_leg2 = plt.gcf().axes[i_ax+2]
-    else:
-        widths, heights = [[2, 2], [.2, 1, .2, 1, 1, 1, .2]]
-        fig = plt.figure(constrained_layout=True, figsize=(10*sum(widths), 
-                                                           10*sum(heights)))
-        spec = gridspec.GridSpec(nrows=len(heights), ncols=len(widths),
-                                 figure=fig, 
-                                 width_ratios=widths, 
-                                 height_ratios=heights)
-        axes = {}
-        for row in range(4):
-            for col in range(2):
-                axes[row, col] = fig.add_subplot(spec[[1,row+2][int(row>0)], col])
-        ax_leg0 = fig.add_subplot(spec[0, :])
-        ax_leg0.axis('off')
-        ax_leg1 = fig.add_subplot(spec[2, :])
-        ax_leg1.axis('off')
-        ax_leg2 = fig.add_subplot(spec[-1, :])
-        ax_leg2.axis('off')
-    
-    # Plotting Raw CV errors (PSNR, SSIM)
-    axes[0, 0].plot(range(1, len(psnr1m)+1), 
-                    psnr1m, label=label, 
-                    color = color, alpha=alpha)
-    self.format_axis(axes[0, 0], vmin=20, vmax=40, step = 10, axis = 'y', 
-                     type_labels='int')
-    self.format_axis(axes[0, 0], vmin=0, vmax=len(psnr1m), step = 10, 
-                     axis = 'x', ax_label='time', type_labels='int')
-    axes[0, 0].set_ylabel('PSNR')
-    axes[0, 0].set_title('temporal evaluation')
-    # self.set_description(axes[0, 0], legend_loc='lower center', 
-    #                      title='temporal evaluation', fontsize='x-small')
-    
-    axes[0, 1].plot(range(1, len(errors[1])+1), 
-                    errors[1], label=label, 
-                    color = color)
-    if last:
-        axes[0, 1].plot(range(1, len(errors[1])+1), 
-                        np.ones_like(errors[1]), label='ideal', 
-                        linestyle=(0, (5, 10)), color='tab:cyan')
-    self.format_axis(axes[0, 1], vmin=0.8, vmax=1, step = 0.1, axis = 'y', 
-                     type_labels='%.1f', margin=[0,1])
-    self.format_axis(axes[0, 1], vmin=0, vmax=len(errors[1]), step = 10, 
-                     axis = 'x', ax_label='time', type_labels='int')
-    axes[0, 1].set_ylabel('SSIM')
-    axes[0, 1].set_title('temporal evaluation')
-    # self.set_description(axes[0, 1], legend_loc='lower center', 
-    #                      title='temporal evaluation', fontsize='x-small')
-    ax_leg0.legend(*axes[0, 1].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    
-    # Plotting the other columns: Physical errors (centers assignment)
-    for i in range(1,7):
-        row = (i - 1) // 2 + 1
-        col = (i - 1) % 2
-        axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                            kcenterm[i], 
-                            label=label, 
-                            color = color, alpha=alpha)
-        if last:
-            axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                                [kinter(i) for _ in range(len(kcenterm[i]))], 
-                                label='Rand', linestyle=(0, (5, 10)), 
-                                color='tab:brown')
-            axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                                np.ones_like(kcenterm[i]), label='Ideal', 
-                                linestyle=(0, (5, 10)), color='tab:cyan')
-        self.format_axis(axes[row, col], vmin=0, vmax=1, step = 0.2,
-                         axis = 'y', ax_label='accuracy', type_labels='%.1f', 
-                         margin=[0,1])
-        self.format_axis(axes[row, col], vmin=0, vmax=len(kcenterm[i]), 
-                         step = 10, axis = 'x', ax_label='time', 
-                         type_labels='int')
-        axes[row, col].set_ylabel('%i-NN Accuracy'%i)
-        axes[row, col].set_title('temporal evaluation')
-    ax_leg1.legend(*axes[row, col].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    ax_leg2.legend(*axes[row, col].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    # spec.tight_layout(fig)
-    
-    if not(manual_mode):
-        self.savefig_autodpi(os.path.join(
-            self.results_dir,'testing','Data-{}.png'.format(ds)),
-            bbox_inches='tight')
-        plt.close()
 
 self = SP_PCUNet(FLAGS, 
         classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
@@ -443,17 +333,16 @@ namecolor_legends = [('ib-mts',('b',1)),
                      ('ib-gru',('r',.5)),
                      ('nbeats',('y',.5))]
 updates = [False] + [True]*(len(new_mods)-1)
-n_mod = len(namecolor_legends)
 res = {}
-for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enumerate(zip(
-        new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates)):
+for new_mod, old_mod, new_dir, old_dir, namecolor_legend, update in zip(
+        new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates):
     self.results_dir = os.path.normpath(
             self.results_dir).replace(
                 os.path.normpath(old_dir), 
                 os.path.normpath(new_dir)).replace(
                     os.path.normpath(old_mod), 
                     os.path.normpath(new_mod))
-    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results"
+    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results {}".format(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)))
     print('imported data from {}'.format(self.results_dir))
     
     results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
@@ -583,57 +472,31 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
     
     results.close()
     
-    for i in range(len(self.feat_legends)):
-        print('Mean-err ABS feature-%s = %.3f'%(self.feat_legends[i][0], np.mean(mean_abs_err[ds])))
-        print('Mean-err REL feature-%s = %.3f'%(self.feat_legends[i][0], np.mean(mean_rel_err[ds])))
+    i_img = list(makedir.keys())[nclsfier]
     
-    means[ds] = [np.array(psnrs).mean()]
-    stds[ds] = np.array(psnrs).std()
-    print('Mean PSNR = %.3f'%means[ds][0])
-    print('Std PSNR = %.3f'%stds[ds])
-    
-    glob_psnr = -10.0 * np.log10(np.mean(np.concatenate(errors, axis = 1)[0]))
-    glob_ssim = np.mean(np.concatenate(errors, axis = 1)[1])
-    psnr1m = np.mean(-10.0 * np.log10(np.concatenate(errors, axis = 1)), axis = 1)[0,:]
-    psnr5m = np.mean(-10.0 * np.log10(np.concatenate(errors5, axis = 1)), axis = 1)[0,:]
-    errors = np.mean(np.concatenate(errors, axis = 1), axis = 1) # mse, ssim
-    errors5 = np.mean(np.concatenate(errors5, axis = 1), axis = 1)
-    kcenterm = {}
-    for i in range(1,7):
-        kcenterm[i] = np.mean(np.concatenate(kcenter[i], axis = 0), axis = 0)
-    
-    means_ssim[ds] = [np.array(errors[1,:]).mean()]
-    stds_ssim[ds] = np.array(errors[1,:]).std()
-    print('Mean SSIM = %.3f'%means_ssim[ds][0])
-    print('Std SSIM = %.3f'%stds_ssim[ds])
-    means_kcenter[ds] = {}
-    stds_kcenter[ds] = {}
-    for i in range(1,7):
-        means_kcenter[ds][i] = [np.array(kcenterm[i]).mean()]
-        stds_kcenter[ds][i] = np.array(kcenterm[i]).std()
-        print('Mean K-CENTERS-%i = %.3f'%(i, means_kcenter[ds][i][0]))
-        print('Std K-CENTERS-%i = %.3f'%(i, stds_kcenter[ds][i]))
-    
-    for i in range(1,7):
-        assert len(kcenterm[i]) == len(psnr1m), "accuracy lengthes should be the same for kcenter%i and psnr1m, here %i and %i"%(i, len(kcenterm[i]),len(psnr1m))
-    
-    means[ds].append(psnr1m)
-    means[ds].append(psnr5m)
-    means_ssim[ds].append(errors[1, :])
-    means_ssim[ds].append(errors5[1,:])
-    for i in range(1,7):
-        means_kcenter[ds][i].append(kcenterm[i])
-    
-    if out_img:
-        plot_cv(psnr1m, psnr5m, errors, errors5, kcenterm,
-                update=update, lc=namecolor_legend, last=i_mod==n_mod-1)
-    res[new_mod] = {'PSNR':[means[ds][0], np.mean(psnr1m), glob_psnr],
-                    'SSIM':[means_ssim[ds][0], np.mean(errors[1]),glob_ssim],
-                    **{nnn:[means_kcenter[ds][innn+1]] for innn,nnn in enumerate(['{}-NN'.format(k) for k in range(1,7)])}}
+    mts = mts_results[i_img][ds]
+    meta=None
+    glob=None
+    glob_meta=None
+    res[new_mod] = {}
+    for dts, ndts in zip([['global'], ['QS', 'AR', 'FL']],
+                         ['cond_no', 'cond_1']):
+        pioc = pio_centers[i_img][ds][ndts]
+        hc0 = pioc['info_c0c1']['entropies'][0]
+        klc01 = pioc['info_c0c1']['kl-div']
+        klc02 = pioc['info_c0c2']['kl-div']
+        hc1, hc2 = pioc['info_c1c2']['entropies']
+        hc2 = pioc['info_c1c2']['entropies'][1]
+        ic12 = pioc['info_c1c2']['mutual_info']
+        
+        for dt in dts:
+            res[new_mod][dt] = {
+                'hc0': hc0[dt] if isinstance(hc0, dict) else hc0,
+                'klc01': klc01[dt] if isinstance(klc01, dict) else klc01,
+                'klc02': klc02[dt] if isinstance(klc02, dict) else klc02,
+                'hc1': hc1[dt] if isinstance(hc1, dict) else hc1,
+                'hc2': hc2[dt] if isinstance(hc2, dict) else hc2,
+                'ic12': ic12[dt] if isinstance(ic12, dict) else ic12
+                }
 
-if out_img:
-    self.savefig_autodpi(fname,
-        bbox_inches=None)
-        # bbox_inches='tight')
-np.savez('psnr_ssim', res = res)
-plt.close()
+np.savez(fname, res=res)

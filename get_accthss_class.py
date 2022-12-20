@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 12 11:34:54 2022
+Created on Fri Nov 18 10:50:12 2022
+
+@author: Denis
+"""
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Oct  6 14:32:29 2022
 
 @author: Denis
 """
@@ -49,7 +55,7 @@ from sklearn.metrics import confusion_matrix#, ConfusionMatrixDisplay
 
 class_parms = None
 from featuring.mts_metrics import NPMtsMetrics
-from featuring.class_n2_metrics import tss_hss
+from featuring.class_n2_metrics import tss_hss_all
 try:
     from main_classify import Settings, update_settings_fromclass
     from models_classify import SP_Conv_Dense, create_class_mask
@@ -62,26 +68,25 @@ else:
     print("successfuly imported libraries on centers and classification")
 
 now = datetime.datetime.now
-plt.rcParams.update({'font.size': 66})
+plt.rcParams.update({'font.size': 55})
 plt.rcParams.update({'font.family': 'Cambria'})
 manual_mode = True
 ds = 'TE'
 label = 'QS'
 nclsfier = 2
-fname = 'compare_cv_nn.pdf'
-out_img = True
+fname = 'compare_act'
 
 # name of the features studied and type of the label ticks for the graphs
 feat_legends = [('intensity','%.1f'),
-                ('triplet intensity','%.3f'),
+                ('triplet intensity','%.2f'),
                 ('line center','%.1f'),
                 ('line width','int'),
-                ('line asymmetry','%.3f'),
+                ('line asymmetry','%.2f'),
                 ('total_continium','int'),
                 ('triplet emission','int'),
-                ('k/h ratio integrated','%.3f'),
-                ('kh ratio max','%.3f'),
-                ('k hight','%.3f'),
+                ('k/h ratio integrated','%.2f'),
+                ('kh ratio max','%.2f'),
+                ('k hight','%.2f'),
                 ('peak ratios','int'),
                 ('peak separation','int')]
 
@@ -196,115 +201,6 @@ flags.DEFINE_boolean("frame_res", False, "To frame marginal results in figures")
 # flags.DEFINE_string("feat_legends", '__'.join(feat_legends), "list of the features legends")
 
 FLAGS = flags.FLAGS
-
-def plot_cv(psnr1m, psnr5m, errors, errors5, kcenterm,
-            update=False, lc=None, last=False):
-    if lc == None:
-        label = 'model?'
-        color = 'b'
-        alpha = 1
-    else:
-        try:
-            label, (color, alpha) = lc
-        except:
-            label, color = lc
-            alpha = 1
-    
-    if update:
-        axes = {}
-        i_ax = 0
-        for row in range(4):
-            for col in range(2):
-                axes[row, col] = plt.gcf().axes[i_ax]
-                i_ax += 1
-        ax_leg0 = plt.gcf().axes[i_ax]
-        ax_leg1 = plt.gcf().axes[i_ax+1]
-        ax_leg2 = plt.gcf().axes[i_ax+2]
-    else:
-        widths, heights = [[2, 2], [.2, 1, .2, 1, 1, 1, .2]]
-        fig = plt.figure(constrained_layout=True, figsize=(10*sum(widths), 
-                                                           10*sum(heights)))
-        spec = gridspec.GridSpec(nrows=len(heights), ncols=len(widths),
-                                 figure=fig, 
-                                 width_ratios=widths, 
-                                 height_ratios=heights)
-        axes = {}
-        for row in range(4):
-            for col in range(2):
-                axes[row, col] = fig.add_subplot(spec[[1,row+2][int(row>0)], col])
-        ax_leg0 = fig.add_subplot(spec[0, :])
-        ax_leg0.axis('off')
-        ax_leg1 = fig.add_subplot(spec[2, :])
-        ax_leg1.axis('off')
-        ax_leg2 = fig.add_subplot(spec[-1, :])
-        ax_leg2.axis('off')
-    
-    # Plotting Raw CV errors (PSNR, SSIM)
-    axes[0, 0].plot(range(1, len(psnr1m)+1), 
-                    psnr1m, label=label, 
-                    color = color, alpha=alpha)
-    self.format_axis(axes[0, 0], vmin=20, vmax=40, step = 10, axis = 'y', 
-                     type_labels='int')
-    self.format_axis(axes[0, 0], vmin=0, vmax=len(psnr1m), step = 10, 
-                     axis = 'x', ax_label='time', type_labels='int')
-    axes[0, 0].set_ylabel('PSNR')
-    axes[0, 0].set_title('temporal evaluation')
-    # self.set_description(axes[0, 0], legend_loc='lower center', 
-    #                      title='temporal evaluation', fontsize='x-small')
-    
-    axes[0, 1].plot(range(1, len(errors[1])+1), 
-                    errors[1], label=label, 
-                    color = color)
-    if last:
-        axes[0, 1].plot(range(1, len(errors[1])+1), 
-                        np.ones_like(errors[1]), label='ideal', 
-                        linestyle=(0, (5, 10)), color='tab:cyan')
-    self.format_axis(axes[0, 1], vmin=0.8, vmax=1, step = 0.1, axis = 'y', 
-                     type_labels='%.1f', margin=[0,1])
-    self.format_axis(axes[0, 1], vmin=0, vmax=len(errors[1]), step = 10, 
-                     axis = 'x', ax_label='time', type_labels='int')
-    axes[0, 1].set_ylabel('SSIM')
-    axes[0, 1].set_title('temporal evaluation')
-    # self.set_description(axes[0, 1], legend_loc='lower center', 
-    #                      title='temporal evaluation', fontsize='x-small')
-    ax_leg0.legend(*axes[0, 1].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    
-    # Plotting the other columns: Physical errors (centers assignment)
-    for i in range(1,7):
-        row = (i - 1) // 2 + 1
-        col = (i - 1) % 2
-        axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                            kcenterm[i], 
-                            label=label, 
-                            color = color, alpha=alpha)
-        if last:
-            axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                                [kinter(i) for _ in range(len(kcenterm[i]))], 
-                                label='Rand', linestyle=(0, (5, 10)), 
-                                color='tab:brown')
-            axes[row, col].plot(range(1, len(kcenterm[i])+1), 
-                                np.ones_like(kcenterm[i]), label='Ideal', 
-                                linestyle=(0, (5, 10)), color='tab:cyan')
-        self.format_axis(axes[row, col], vmin=0, vmax=1, step = 0.2,
-                         axis = 'y', ax_label='accuracy', type_labels='%.1f', 
-                         margin=[0,1])
-        self.format_axis(axes[row, col], vmin=0, vmax=len(kcenterm[i]), 
-                         step = 10, axis = 'x', ax_label='time', 
-                         type_labels='int')
-        axes[row, col].set_ylabel('%i-NN Accuracy'%i)
-        axes[row, col].set_title('temporal evaluation')
-    ax_leg1.legend(*axes[row, col].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    ax_leg2.legend(*axes[row, col].get_legend_handles_labels(), loc="center", 
-                   fontsize='small', ncol=4, frameon=False)
-    # spec.tight_layout(fig)
-    
-    if not(manual_mode):
-        self.savefig_autodpi(os.path.join(
-            self.results_dir,'testing','Data-{}.png'.format(ds)),
-            bbox_inches='tight')
-        plt.close()
 
 self = SP_PCUNet(FLAGS, 
         classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
@@ -443,21 +339,20 @@ namecolor_legends = [('ib-mts',('b',1)),
                      ('ib-gru',('r',.5)),
                      ('nbeats',('y',.5))]
 updates = [False] + [True]*(len(new_mods)-1)
-n_mod = len(namecolor_legends)
 res = {}
-for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enumerate(zip(
-        new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates)):
+for new_mod, old_mod, new_dir, old_dir, namecolor_legend, update in zip(
+        new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates):
+    res[new_mod] = {}
     self.results_dir = os.path.normpath(
             self.results_dir).replace(
                 os.path.normpath(old_dir), 
                 os.path.normpath(new_dir)).replace(
                     os.path.normpath(old_mod), 
                     os.path.normpath(new_mod))
-    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results"
+    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results {}".format(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)))
     print('imported data from {}'.format(self.results_dir))
     
     results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
-    
     try:
         mean_abs_err[ds] = results['mean_abs_err']
         mean_rel_err[ds] = results['mean_rel_err']
@@ -484,12 +379,13 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
             for clsn in list(self.classifier.keys()):
                 pio_centers[clsn][ds] = results['pio_centers'].all()[clsn]
     except:
-        last_raw_saving = results['last_raw_saving']
+        results.close()
+        results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
         if 'end' in results.keys():
             end_raw = results['end']
         else:
-            end_raw = False
-        assert end_raw, "the test savings were not terminated"
+            end_raw = True
+        last_raw_saving = results['last_raw_saving']
         print("loading previous raw results: last saved index is {}".format(last_raw_saving))
         mean_abs_err[ds] = results['mean_abs_err']
         mean_rel_err[ds] = results['mean_rel_err']
@@ -544,7 +440,6 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
                 self.center_counter_pio[
                     clsn].batchinfo_pio.count = pio_metrics_save[
                         clsn]['pio']['count']
-        
         if self.add_classifier:
             for clsn in list(self.classifier.keys()):
                 # Collect results
@@ -580,20 +475,17 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
                     'cond_1_2_3':self.center_counter_pio[i_img].result_cond_1_2_3()}
         else:
             pio_centers['noclassifier'][ds] = [None]
-    
     results.close()
     
     for i in range(len(self.feat_legends)):
-        print('Mean-err ABS feature-%s = %.3f'%(self.feat_legends[i][0], np.mean(mean_abs_err[ds])))
-        print('Mean-err REL feature-%s = %.3f'%(self.feat_legends[i][0], np.mean(mean_rel_err[ds])))
+        print('Mean-err ABS feature-%s = %.2f'%(self.feat_legends[i][0], np.mean(mean_abs_err[ds])))
+        print('Mean-err REL feature-%s = %.2f'%(self.feat_legends[i][0], np.mean(mean_rel_err[ds])))
     
     means[ds] = [np.array(psnrs).mean()]
     stds[ds] = np.array(psnrs).std()
-    print('Mean PSNR = %.3f'%means[ds][0])
-    print('Std PSNR = %.3f'%stds[ds])
+    print('Mean PSNR = %.2f'%means[ds][0])
+    print('Std PSNR = %.2f'%stds[ds])
     
-    glob_psnr = -10.0 * np.log10(np.mean(np.concatenate(errors, axis = 1)[0]))
-    glob_ssim = np.mean(np.concatenate(errors, axis = 1)[1])
     psnr1m = np.mean(-10.0 * np.log10(np.concatenate(errors, axis = 1)), axis = 1)[0,:]
     psnr5m = np.mean(-10.0 * np.log10(np.concatenate(errors5, axis = 1)), axis = 1)[0,:]
     errors = np.mean(np.concatenate(errors, axis = 1), axis = 1) # mse, ssim
@@ -604,15 +496,15 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
     
     means_ssim[ds] = [np.array(errors[1,:]).mean()]
     stds_ssim[ds] = np.array(errors[1,:]).std()
-    print('Mean SSIM = %.3f'%means_ssim[ds][0])
-    print('Std SSIM = %.3f'%stds_ssim[ds])
+    print('Mean SSIM = %.2f'%means_ssim[ds][0])
+    print('Std SSIM = %.2f'%stds_ssim[ds])
     means_kcenter[ds] = {}
     stds_kcenter[ds] = {}
     for i in range(1,7):
         means_kcenter[ds][i] = [np.array(kcenterm[i]).mean()]
         stds_kcenter[ds][i] = np.array(kcenterm[i]).std()
-        print('Mean K-CENTERS-%i = %.3f'%(i, means_kcenter[ds][i][0]))
-        print('Std K-CENTERS-%i = %.3f'%(i, stds_kcenter[ds][i]))
+        print('Mean K-CENTERS-%i = %.2f'%(i, means_kcenter[ds][i][0]))
+        print('Std K-CENTERS-%i = %.2f'%(i, stds_kcenter[ds][i]))
     
     for i in range(1,7):
         assert len(kcenterm[i]) == len(psnr1m), "accuracy lengthes should be the same for kcenter%i and psnr1m, here %i and %i"%(i, len(kcenterm[i]),len(psnr1m))
@@ -624,16 +516,31 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
     for i in range(1,7):
         means_kcenter[ds][i].append(kcenterm[i])
     
-    if out_img:
-        plot_cv(psnr1m, psnr5m, errors, errors5, kcenterm,
-                update=update, lc=namecolor_legend, last=i_mod==n_mod-1)
-    res[new_mod] = {'PSNR':[means[ds][0], np.mean(psnr1m), glob_psnr],
-                    'SSIM':[means_ssim[ds][0], np.mean(errors[1]),glob_ssim],
-                    **{nnn:[means_kcenter[ds][innn+1]] for innn,nnn in enumerate(['{}-NN'.format(k) for k in range(1,7)])}}
+    i_img = list(makedir.keys())[nclsfier]
+    
+    mts = mts_results[i_img][ds]
+    meta=None
+    glob=None
+    glob_meta=None
+    
+    for i, (cm, name) in enumerate(zip(
+            [class_IOchange, class_TIchange, class_TOchange],
+            ['ClassifiedInput VS ClassifiedOutput', 'TrueWeakLabel VS ClassifiedInput', 'TrueWeakLabel VS ClassifiedOutput'])):
+        print("Classifier used: ", i_img)
+        print("cm", list(cm[i_img][ds].shape))
+        print("cf", confusion_classes[i_img])
+        th = tss_hss_all(cm[i_img][ds], confusion_classes[i_img])
+        print('cf', confusion_classes[i_img][i]!='PF')
+        find_acc = lambda lbl: (cm[i_img][ds][confusion_classes[i_img].index(lbl),
+                       confusion_classes[i_img].index(lbl)]+np.sum([
+                           [cm[i_img][ds][i,j] for i in range(len(cm[i_img][ds])) if confusion_classes[i_img][i] not in ['PF', lbl]
+                            ] for j in range(len(cm[i_img][ds])) if confusion_classes[i_img][j] not in ['PF', lbl]
+                           ]))/np.sum([[cm[i_img][ds][i,j] for i in range(len(cm[i_img][ds])) if confusion_classes[i_img][i]!='PF'] for j in range(len(cm[i_img][ds])) if confusion_classes[i_img][i]!='PF'])*100 if lbl!='glob' else np.sum([cm[i_img][ds][i,i] for i in range(len(cm[i_img][ds])) if confusion_classes[i_img][i]!='PF'])/np.sum([[cm[i_img][ds][i,j] for i in range(len(cm[i_img][ds])) if confusion_classes[i_img][i]!='PF'] for j in range(len(cm[i_img][ds])) if confusion_classes[i_img][i]!='PF'])*100
+        res[new_mod][name] = {lbl:{
+            'ACC': find_acc(lbl),
+            'TSS': th[0][lbl],
+            'HSS': th[1][lbl]} for lbl in th[0].keys()}
 
-if out_img:
-    self.savefig_autodpi(fname,
-        bbox_inches=None)
-        # bbox_inches='tight')
-np.savez('psnr_ssim', res = res)
+np.savez(fname, res=res)
+    # bbox_inches='tight')
 plt.close()
