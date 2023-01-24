@@ -2,6 +2,11 @@
 
 Code of the paper "Multi variables time series information bottleneck"
 
+[Multi variables time series information bottleneck](https://arxiv.org) <br>
+[Denis Ullmann](https://orcid.org/0000-0002-7179-005X), [Olga Taran](https://orcid.org/0000-0001-8537-5204), [Slava Voloshynoskyy](https://orcid.org/0000-0003-0416-9674) <br>
+University of Geneva <br>
+SNSF NRP75 Grant
+
 ## Intro
 
 This repository contains all the necessary information to replicate the results obtained in the paper "Multi variables time series information bottleneck"
@@ -33,7 +38,11 @@ Different concurrent models are evaluated and their codes are present in the rep
 
 ## Requirements
 
-Use `requirements.txt`
+You may create a virtual environnement and use `requirements.txt`:
+
+```
+$ pip install -r requirements.txt
+```
 
 ## Install
 
@@ -45,32 +54,68 @@ git clone https://github.com/DenisUllmann/IB-MTS
 
 ## Download data
 
+Three datasets are used in the paper (preprocessed data available bellow):
+
+* IRIS data available at [LMSAL](https://iris.lmsal.com/)
+* AL data available at [Add](add)
+* PB data available at [Add](add)
+
+To skip the preprocessing part, you may download the preprocessed data instead:
+
+* IRIS data available at [Zenodo](10.5281/zenodo.7524572)
+* AL data available at [Add](add)
+* PB data available at [Add](add)
+
 
 ## Download weights
 
+Weights of the IB-MTS model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+Weights of the LSTM model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+Weights of the IB-LSTM model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+Weights of the GRU model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+Weights of the IB-GRU model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+Weights of the Nbeats model:
+* On IRIS data [Add](add)
+* On AL data [Add](add)
+* On PB data [Add](add)
+
+And weights of the Classifier of solar activities on IRIS data: [Add](add)
 
 ## Usage
 
-Use the well known command to copy the template
+If you would like to preprocess the data and train the models, follow [From Scratch](#from-scratch).
 
-```bash
-# Copy the content
-CTRL + C
+If you would like to directly test the models and skip the preprocessing and training part, follow [From pretrained models and preprocessed data](#From-pretrained-models-and-preprocessed-data).
 
-# Pase into your project
-CTRL + V
-```
+### From scratch
+
+
+### From pretrained models and preprocessed data
+
 
 ## Brief explanation
 
-Here starts the main content of your README. This is why you did it for in the first place.
-To describe to future users of this project (including yourself) everything they need to know
-to be able to use it and understand it.
-
-Use visuals to help the reader understand better. An image, diagram, chart or code example says
-more than thousand words
-
-![Diagram](doc/diagram.jpg)
+Add
 
 
 ## License
