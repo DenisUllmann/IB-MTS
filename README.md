@@ -119,4 +119,4 @@ Add
 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://github.com/DenisUllmann/IB-MTS/blob/main/LICENSE)
