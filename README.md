@@ -69,35 +69,7 @@ To skip the preprocessing part, you may download the preprocessed data instead:
 
 ## Download weights
 
-Weights of the IB-MTS model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
-
-Weights of the LSTM model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
-
-Weights of the IB-LSTM model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
-
-Weights of the GRU model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
-
-Weights of the IB-GRU model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
-
-Weights of the Nbeats model:
-* On IRIS data [Add](add)
-* On AL data [Add](add)
-* On PB data [Add](add)
+Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](10.5281/zenodo.7568871)
 
 And weights of the Classifier of solar activities on IRIS data: [Add](add)
 
