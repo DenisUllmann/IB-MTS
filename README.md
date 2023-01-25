@@ -57,8 +57,8 @@ git clone https://github.com/DenisUllmann/IB-MTS
 Three datasets are used in the paper (preprocessed data available bellow):
 
 * IRIS data available at [LMSAL](https://iris.lmsal.com/)
-* AL data available at [Add](add)
-* PB data available at [Add](add)
+* AL data available at [NREL](https://www.nrel.gov/grid/solar-power-data.html)
+* PB data available at [CalTrans](https://pems.dot.ca.gov/) or [Zenodo](10.5281/zenodo.5724362)
 
 To skip the preprocessing part, you may download the preprocessed data instead:
 
