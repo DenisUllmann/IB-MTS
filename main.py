@@ -92,7 +92,9 @@ classes_and_inclusions_addnoclass = list(zip(
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string("model_type", "PCUNet", "name of the model to user ['PCUNet'], ['LSTM'], ['GRU'], ..")
+flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
+flags.DEFINE_boolean("change_traindata", True, "whether to enable to save/overwrite data_longformat.npz")
+flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
 flags.DEFINE_boolean("with_centerloss", False, "whether to add a term in the total loss optimizing the proximity to the centers")
 flags.DEFINE_boolean("debug", True, "True to use debug mode (1 epoch and 1st item of generator for test)")
 flags.DEFINE_integer("epoch", 100, "Epoch to train [25]")
@@ -101,7 +103,8 @@ flags.DEFINE_boolean("batch_norm", True, "True for the model with batch_normalza
 flags.DEFINE_float("learning_rate_BN", 0.0002, "Learning rate of for adam with BN (phase 1) [0.0002]")
 flags.DEFINE_float("learning_rate_FINE", 0.00005, "Learning rate of for adam without BN (phase 2 - Fine tuning) [0.00005]")
 flags.DEFINE_string("dataset", "pb_2C", "The name of dataset [iris_level_2C, al_2C, pb_2C]")
-flags.DEFINE_string("dataset_address", 'C:/Users/Denis/ML/MTS_Data/PEMS-BAY/data_2c', "The path of dataset")
+flags.DEFINE_string("root_address", '.', "The path for the root folder of the project")
+flags.DEFINE_string("dataset_address", os.path.join(FLAGS.root_address,'iris_data'), "The path of dataset")
 flags.DEFINE_boolean("given_tvt", True, "Whether the data is already separated in 'train' 'valid' 'test' (these should appear in the file names)")
 flags.DEFINE_float("train_ratio", 0.7, "ratio of dataset to use for training [0.7]")
 flags.DEFINE_float("test_ratio", 0.25, "ratio of dataset to use for testing [0.25]")
@@ -114,9 +117,9 @@ flags.DEFINE_string("labels", '_'.join(['PB']), "label for training ['QS','AR','
 flags.DEFINE_string("nolabel", None, "allow to sample from unlabeled data and label it eg. 'nolabel'")
 flags.DEFINE_string("test_labels", '_'.join(['PB']), "label for testing ['QS','AR','PF','FL']")
 flags.DEFINE_string("name", 'model%s%s_B%i_M%i_R%i_%s'%([FLAGS.model_type+"%s"%['','star'][int(FLAGS.with_centerloss)],"Mghk%s"%['','star'][int(FLAGS.with_centerloss)]][int(FLAGS.model_type=="PCUNet")], FLAGS.dataset[-2:], FLAGS.batch_size, int(100*FLAGS.mask_ratio), int(FLAGS.random_ratio), FLAGS.labels), "The name of the model")
-flags.DEFINE_string("checkpoint_dir", "C:/Users/Denis/ML/IRIS_predspectra_intermediate_tf2/%s/%s/checkpoint"%(FLAGS.dataset,self.name), "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("logs_dir", "C:/Users/Denis/ML/IRIS_predspectra_intermediate_tf2/%s/%s/log"%(FLAGS.dataset,FLAGS.name), "Directory name to save the log [log]")
-flags.DEFINE_string("results_dir", "C:/Users/Denis/ML/IRIS_predspectra_intermediate_tf2/%s/%s/results"%(FLAGS.dataset,FLAGS.name), "Directory name to save the image samples [samples]")
+flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("logs_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"log"), "Directory name to save the log [log]")
+flags.DEFINE_string("results_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"results"), "Directory name to save the image samples [samples]")
 flags.DEFINE_boolean("train1", True, "True for training phase 1 (with BN) [False]")
 flags.DEFINE_boolean("train2", False, "True for training phase 2 (without BN) : Fine-tuning [False]")
 flags.DEFINE_boolean("preload_train", False, "True for loading a pre-trained model before training, False for testing [False]")
