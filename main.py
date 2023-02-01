@@ -159,7 +159,8 @@ def main():
     
     spectral_predictor = SP_PCUNet(FLAGS, 
         classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
-        feat_legends=feat_legends)
+        feat_legends=feat_legends, manual_mode=FLAGS.manual_mode, 
+        change_traindata=FLAGS.change_traindata)
     
     if output_npz_features:
         spectral_predictor.features_feedback()
