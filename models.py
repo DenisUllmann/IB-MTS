@@ -396,7 +396,7 @@ class SP_PCUNet(object):
             vgg_weights = 'D:/ML savings/IRIS_predspectra/data/logs/pytorch_to_keras_vgg16.h5'
         
         # Instantiate the model
-        if self.model_type == 'PCUNet':
+        if self.model_type == 'IBMTS':
             self.model = PConvUnet(
                 img_rows=self.label_length, img_cols=self.label_length,
                 c_dim=self.c_dim, with_centerloss = self.with_centerloss,
