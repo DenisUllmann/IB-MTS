@@ -39,6 +39,7 @@ output_npz_features = False
 
 # To define several classifiers list[(classes, inclusions, noclass), ..]
 # For model trained with all labels
+# for IRIS data of labeled data
 classes_and_inclusions_addnoclass = list(zip(
     ['_'.join(clss) for clss in [
         ['QS','AR','PF','FL']]],
