@@ -63,8 +63,6 @@ else:
 now = datetime.datetime.now
 plt.rcParams.update({'font.size': 44})
 plt.rcParams.update({'font.family': 'Cambria'})
-manual_mode = True
-change_traindata = True # whether to save/overwrite data_longformat.npz
 
 def saveCompressed(fh, allow_pickle, **namedict):
      with zipfile.ZipFile(fh,
@@ -81,7 +79,8 @@ def saveCompressed(fh, allow_pickle, **namedict):
 
 class SP_PCUNet(object):
     def __init__(self, config, classes_and_inclusions_addnoclass=None,
-                 feat_legends=None):
+                 feat_legends=None, manual_mode=True, 
+		 change_traindata=False):
         if 'n_blocks' in dir(config):
             self.n_blocks = config.n_blocks
         self.with_features = config.with_features
@@ -136,12 +135,10 @@ class SP_PCUNet(object):
         self.fig_form = config.fig_form
         self.frame_res = config.frame_res
         self.coef_diff = 5
-        # self.feat_legends = config.feat_legends
         self.feat_legends = feat_legends
         self.all_labels = list(set(self.labels+self.test_labels))
-
-        # labels = self.labels.split('_')
-        # test_labels = self.test_labels.split('_')
+	manual_mode = True
+	change_traindata = True # whether to save/overwrite data_longformat.npz
         
         print('[%s - START] Creating the datasets..'%now().strftime('%d.%m.%Y - %H:%M:%S'))
         if self.dataset in ['iris_level_2C','iris_level_2B','al_2C','ld_2C','pb_2C']:
