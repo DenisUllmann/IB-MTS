@@ -41,54 +41,11 @@ output_npz_features = False
 # For model trained with all labels
 classes_and_inclusions_addnoclass = list(zip(
     ['_'.join(clss) for clss in [
-        ['QS','AR','PF','FL'],
-        ['QS','AR','PF','FL'],
-        ['QS','AR','PF','FL'],
-        ['QS','AR','PF','FL'],
-        ['QS'],
-        ['AR'],
-        ['PF'],
-        ['FL']]],
+        ['QS','AR','PF','FL']]],
     ['_'.join(incs) for incs in [
-        ['QS<AR'],
-        ['QS<AR'],
-        [''],
-        [''],
-        [''],
-        [''],
-        [''],
         ['']]],
     [
-      None,
-      'noclass',
-      None,
-      'noclass',
-      'noclass',
-      'noclass',
-      'noclass',
-      'noclass']))
-# For model trained just with labels not in the inclusions above
-# classes_and_inclusions_addnoclass = list(zip(
-#     ['_'.join(clss) for clss in [
-#         ['QS','AR','PF','FL'],
-#         ['QS','AR','PF','FL'],
-#         ['QS'],
-#         ['AR'],
-#         ['PF'],
-#         ['FL']]],
-#     ['_'.join(incs) for incs in [
-#         [''],
-#         [''],
-#         [''],
-#         [''],
-#         [''],
-#         ['']]],
-#     [None,
-#      'noclass',
-#      'noclass',
-#      'noclass',
-#      'noclass',
-#      'noclass']))
+      None]))
 
 FLAGS = flags.FLAGS
 
