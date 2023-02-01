@@ -598,3 +598,6 @@ def main():
             # bbox_inches='tight')
     np.savez('psnr_ssim', res = res)
     plt.close()
+
+if __name__ == '__main__':
+    app.run(main)
