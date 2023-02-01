@@ -4,12 +4,6 @@ Created on Fri Nov 18 10:50:12 2022
 
 @author: Denis
 """
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct  6 14:32:29 2022
-
-@author: Denis
-"""
 from models import SP_PCUNet
 
 import os
