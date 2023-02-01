@@ -136,11 +136,11 @@ flags.DEFINE_string("name", 'model%s%s_B%i_M%i_R%i_%s'%([FLAGS.model_type+"%s"%[
 flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("logs_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"log"), "Directory name to save the log [log]")
 flags.DEFINE_string("results_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"results"), "Directory name to save the image samples [samples]")
-flags.DEFINE_boolean("train1", True, "True for training phase 1 (with BN) [False]")
+flags.DEFINE_boolean("train1", False, "True for training phase 1 (with BN) [False]")
 flags.DEFINE_boolean("train2", False, "True for training phase 2 (without BN) : Fine-tuning [False]")
 flags.DEFINE_boolean("preload_train", False, "True for loading a pre-trained model before training, False for testing [False]")
 flags.DEFINE_boolean("testload_FINE", False, "True for loading a trained model with FINE procedure, False for loading a non FINE model [True]")
-flags.DEFINE_boolean("test", True, "True for testing directly at the end of training")
+flags.DEFINE_boolean("test", False, "True for testing directly at the end of training")
 flags.DEFINE_string("test_ds", '_'.join(['TE','TEL']), "chosen datasets for tests ['TR', 'VA', 'TE', 'TEL']")
 flags.DEFINE_boolean("with_features", False, "whether features should be investigated")
 flags.DEFINE_boolean("add_classifier", False, "True to add classification stats (it will use the params from main_classify.py).")
@@ -300,17 +300,17 @@ def main():
     res = {}
     for new_mod, old_mod, new_dir, old_dir, namecolor_legend, update in zip(
             new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates):
-        res[new_mod] = {}
         self.results_dir = os.path.normpath(
                 self.results_dir).replace(
                     os.path.normpath(old_dir), 
                     os.path.normpath(new_dir)).replace(
                         os.path.normpath(old_mod), 
                         os.path.normpath(new_mod))
-        assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results {}".format(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)))
+        assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results"
         print('imported data from {}'.format(self.results_dir))
 
         results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
+
         try:
             mean_abs_err[ds] = results['mean_abs_err']
             mean_rel_err[ds] = results['mean_rel_err']
@@ -337,13 +337,12 @@ def main():
                 for clsn in list(self.classifier.keys()):
                     pio_centers[clsn][ds] = results['pio_centers'].all()[clsn]
         except:
-            results.close()
-            results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
+            last_raw_saving = results['last_raw_saving']
             if 'end' in results.keys():
                 end_raw = results['end']
             else:
-                end_raw = True
-            last_raw_saving = results['last_raw_saving']
+                end_raw = False
+            assert end_raw, "the test savings were not terminated"
             print("loading previous raw results: last saved index is {}".format(last_raw_saving))
             mean_abs_err[ds] = results['mean_abs_err']
             mean_rel_err[ds] = results['mean_rel_err']
@@ -398,6 +397,7 @@ def main():
                     self.center_counter_pio[
                         clsn].batchinfo_pio.count = pio_metrics_save[
                             clsn]['pio']['count']
+
             if self.add_classifier:
                 for clsn in list(self.classifier.keys()):
                     # Collect results
@@ -433,6 +433,7 @@ def main():
                         'cond_1_2_3':self.center_counter_pio[i_img].result_cond_1_2_3()}
             else:
                 pio_centers['noclassifier'][ds] = [None]
+
         results.close()
 
         for i in range(len(self.feat_legends)):
