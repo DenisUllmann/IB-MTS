@@ -288,7 +288,7 @@ def plot_longcv(means, means_ssim, means_kcenter, stride,
 def main():
 	self = SP_PCUNet(FLAGS, 
 		classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
-		feat_legends=feat_legends)
+		feat_legends=feat_legends, manual_mode=True, change_traindata=False)
 
 	means, stds = {}, {}
 	means_ssim, stds_ssim = {}, {}
