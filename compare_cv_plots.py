@@ -591,7 +591,7 @@ def main():
                         'SSIM':[means_ssim[ds][0], np.mean(errors[1]),glob_ssim],
                         **{nnn:[means_kcenter[ds][innn+1]] for innn,nnn in enumerate(['{}-NN'.format(k) for k in range(1,7)])}}
 
-    if out_img:
+    if FLAGS.out_img:
         self.savefig_autodpi(FLAGS.fname,
             bbox_inches=None)
             # bbox_inches='tight')
