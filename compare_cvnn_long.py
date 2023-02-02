@@ -69,7 +69,6 @@ now = datetime.datetime.now
 previous_font_size = plt.rcParams['font.size']
 plt.rcParams.update({'font.size': 66})
 plt.rcParams.update({'font.family': 'Cambria'})
-manual_mode = True
 ds = 'TEL'
 label = 'QS'
 nclsfier = 0
@@ -393,30 +392,30 @@ def main():
 		self.center_counter_pio[clsn].reset()
 		self.glob_center_counter_pio[clsn].reset()
 
-	new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL-V3',
+	new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelGRU2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelNBeats2C_B4_M25_R0_QS_AR_PF_FL']
 	old_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
-		    'modelMghk2C_B4_M25_R0_QS_AR_PF_FL-V3',
+		    'modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
 		    'modelGRU2C_B4_M25_R0_QS_AR_PF_FL']
-	new_dirs = ['IRIS_predspectra_intermediate_new',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'HPC/Yggdrasil/IRIS_predspectra_intermediate_tf2']
-	old_dirs = ['IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_new',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'IRIS_predspectra_intermediate_tf2',
-		    'ML/IRIS_predspectra_intermediate_tf2']
+	new_dirs = ['IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS']
+	old_dirs = ['IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS']
 	namecolor_legends = [('ib-mts',('b',1)),
 			     ('lstm',('c',.5)),
 			     ('ib-lstm',('g',.5)),
@@ -620,8 +619,8 @@ def main():
 			    'SSIM':[means_ssim[ds][0], np.mean(means_ssim[ds][1:])],
 			    **{nnn:[means_kcenter[ds][innn+1]] for innn,nnn in enumerate(['{}-NN'.format(k) for k in range(1,7)])}}
 
-	if out_img:
-	    self.savefig_autodpi(fname,
+	if FLAGS.out_img:
+	    self.savefig_autodpi(FLAGS.fname,
 		bbox_inches=None)
 		# bbox_inches='tight')
 	np.savez('psnr_ssim_long', res = res)
