@@ -70,7 +70,6 @@ plt.rcParams.update({'font.family': 'Cambria'})
 ds = 'TE'
 label = 'QS'
 nclsfier = 0
-fname = 'compare_ib'
 
 # name of the features studied and type of the label ticks for the graphs
 feat_legends = [('intensity','%.1f'),
@@ -107,6 +106,7 @@ classes_and_inclusions_addnoclass = list(zip(
 
 FLAGS = flags.FLAGS
 
+flags.DEFINE_string("fname", 'compare_ib', "File name: path with name of the output file")
 flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
 flags.DEFINE_boolean("change_traindata=False", True, "whether to enable to save/overwrite data_longformat.npz")
 flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
