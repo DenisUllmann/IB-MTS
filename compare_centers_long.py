@@ -163,263 +163,263 @@ flags.DEFINE_boolean("backg_color", False, "Whether to colorize backgrounds or n
 flags.DEFINE_boolean("frame_res", False, "To frame marginal results in figures")
 
 def main():
-self = SP_PCUNet(FLAGS, 
-        classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
-        feat_legends=feat_legends)
+	self = SP_PCUNet(FLAGS, 
+		classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
+		feat_legends=feat_legends, manual_mode=True, change_traindata=False)
 
-means, stds = {}, {}
-means_ssim, stds_ssim = {}, {}
-means_kcenter, stds_kcenter = {}, {}
-mean_abs_err, mean_rel_err = {},{}
-abs_length, rel_length = {}, {}
-mts_results = {clsn:{} for clsn in list(self.classifier.keys())}
-glob_mts_results = {clsn:{} for clsn in list(self.classifier.keys())}
-if self.add_classifier:
-    class_count_in = {}
-    class_results_in = {}
-    class_count_out = {}
-    class_results_out = {}
-    class_acc = {}
-    class_IOchange = {}
-    class_TIchange = {}
-    class_TOchange = {}
-    confusion_classes = {}
-    for clsn in list(self.classifier.keys()):
-        class_count_in[clsn] = {}
-        class_results_in[clsn] = {}
-        class_count_out[clsn] = {}
-        class_results_out[clsn] = {}
-        class_acc[clsn] = {}
-        class_IOchange[clsn] = {}
-        class_TIchange[clsn] = {}
-        class_TOchange[clsn] = {}
-if self.add_centercount:
-    if self.add_classifier:
-        pio_centers = {clsn:{} for clsn in list(self.classifier.keys())}
-        globpio_centers = {clsn:{} for clsn in list(self.classifier.keys())}
-    else:
-        pio_centers = {'noclassifier':{}}
-        globpio_centers = {'noclassifier':{}}
+	means, stds = {}, {}
+	means_ssim, stds_ssim = {}, {}
+	means_kcenter, stds_kcenter = {}, {}
+	mean_abs_err, mean_rel_err = {},{}
+	abs_length, rel_length = {}, {}
+	mts_results = {clsn:{} for clsn in list(self.classifier.keys())}
+	glob_mts_results = {clsn:{} for clsn in list(self.classifier.keys())}
+	if self.add_classifier:
+	    class_count_in = {}
+	    class_results_in = {}
+	    class_count_out = {}
+	    class_results_out = {}
+	    class_acc = {}
+	    class_IOchange = {}
+	    class_TIchange = {}
+	    class_TOchange = {}
+	    confusion_classes = {}
+	    for clsn in list(self.classifier.keys()):
+		class_count_in[clsn] = {}
+		class_results_in[clsn] = {}
+		class_count_out[clsn] = {}
+		class_results_out[clsn] = {}
+		class_acc[clsn] = {}
+		class_IOchange[clsn] = {}
+		class_TIchange[clsn] = {}
+		class_TOchange[clsn] = {}
+	if self.add_centercount:
+	    if self.add_classifier:
+		pio_centers = {clsn:{} for clsn in list(self.classifier.keys())}
+		globpio_centers = {clsn:{} for clsn in list(self.classifier.keys())}
+	    else:
+		pio_centers = {'noclassifier':{}}
+		globpio_centers = {'noclassifier':{}}
 
-test_ds = self.test_ds
+	test_ds = self.test_ds
 
-psnrs_df = pd.DataFrame()
-ssims_df =  pd.DataFrame()
-kcenters_df = {}
-for i in range(1, 7):
-    kcenters_df[i] = pd.DataFrame()
+	psnrs_df = pd.DataFrame()
+	ssims_df =  pd.DataFrame()
+	kcenters_df = {}
+	for i in range(1, 7):
+	    kcenters_df[i] = pd.DataFrame()
 
-mean_abs_err[ds] = np.zeros((len(self.feat_legends), 1))
-mean_rel_err[ds] = np.zeros((len(self.feat_legends), 1))
-abs_length[ds] = np.zeros((len(self.feat_legends), 1))
-rel_length[ds] = np.zeros((len(self.feat_legends), 1))
+	mean_abs_err[ds] = np.zeros((len(self.feat_legends), 1))
+	mean_rel_err[ds] = np.zeros((len(self.feat_legends), 1))
+	abs_length[ds] = np.zeros((len(self.feat_legends), 1))
+	rel_length[ds] = np.zeros((len(self.feat_legends), 1))
 
-if self.add_classifier:
-    np_all_metrics = [
-        NP_CategoricalCrossentropy, 
-        NP_BinaryCrossentropy, 
-        NP_CategoricalAccuracy, 
-        NP_BinaryAccuracy]
-    np_metrics_in = {}
-    np_metrics_out = {}
-    makedir = {}
-    for clsn, clsfier in self.classifier.items():
-        np_metrics_in[clsn] = [m for m in np_all_metrics if any(
-            [mm.name in m().name for mm in clsfier.model.model.metrics])]
-        np_metrics_in[clsn] = [mm(**a) for mm, a in zip(
-            np_metrics_in[clsn], 
-            [[{}, {'class_assign_fn':clsfier.model.np_assign_class}][int(
-                tf.keras.metrics.CategoricalAccuracy().name == m().name)] for m in np_metrics_in[clsn]])]
-        np_metrics_out[clsn] = [m for m in np_all_metrics if any(
-            [mm.name in m().name for mm in clsfier.model.model.metrics])]
-        np_metrics_out[clsn] = [mm(**a) for mm, a in zip(
-            np_metrics_out[clsn], 
-            [[{}, {'class_assign_fn':clsfier.model.np_assign_class}][int(
-                tf.keras.metrics.CategoricalAccuracy().name == m().name)] for m in np_metrics_out[clsn]])]
-        for metric in np_metrics_in[clsn]:
-            metric.reset_states()
-        for metric in np_metrics_out[clsn]:
-            metric.reset_states()
-        # confusion matrix IN OUT classification
-        if clsfier.noclass is not None:
-            class_IOchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
-            class_TIchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
-            class_TOchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
-            confusion_classes[clsn] = clsfier.classes + [clsfier.noclass]
-        else:
-            assert clsfier.noclass is None, "In and Out classifiers should have the same 'noclass'"
-            class_IOchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
-            class_TIchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
-            class_TOchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
-            confusion_classes[clsn] = clsfier.classes
-        makedir[clsn] = clsn
-else:
-    makedir = {'noclassifier':'noclassifier'}
+	if self.add_classifier:
+	    np_all_metrics = [
+		NP_CategoricalCrossentropy, 
+		NP_BinaryCrossentropy, 
+		NP_CategoricalAccuracy, 
+		NP_BinaryAccuracy]
+	    np_metrics_in = {}
+	    np_metrics_out = {}
+	    makedir = {}
+	    for clsn, clsfier in self.classifier.items():
+		np_metrics_in[clsn] = [m for m in np_all_metrics if any(
+		    [mm.name in m().name for mm in clsfier.model.model.metrics])]
+		np_metrics_in[clsn] = [mm(**a) for mm, a in zip(
+		    np_metrics_in[clsn], 
+		    [[{}, {'class_assign_fn':clsfier.model.np_assign_class}][int(
+			tf.keras.metrics.CategoricalAccuracy().name == m().name)] for m in np_metrics_in[clsn]])]
+		np_metrics_out[clsn] = [m for m in np_all_metrics if any(
+		    [mm.name in m().name for mm in clsfier.model.model.metrics])]
+		np_metrics_out[clsn] = [mm(**a) for mm, a in zip(
+		    np_metrics_out[clsn], 
+		    [[{}, {'class_assign_fn':clsfier.model.np_assign_class}][int(
+			tf.keras.metrics.CategoricalAccuracy().name == m().name)] for m in np_metrics_out[clsn]])]
+		for metric in np_metrics_in[clsn]:
+		    metric.reset_states()
+		for metric in np_metrics_out[clsn]:
+		    metric.reset_states()
+		# confusion matrix IN OUT classification
+		if clsfier.noclass is not None:
+		    class_IOchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
+		    class_TIchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
+		    class_TOchange[clsn][ds] = np.zeros([clsfier.nclass+1]*2, np.int64)
+		    confusion_classes[clsn] = clsfier.classes + [clsfier.noclass]
+		else:
+		    assert clsfier.noclass is None, "In and Out classifiers should have the same 'noclass'"
+		    class_IOchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
+		    class_TIchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
+		    class_TOchange[clsn][ds] = np.zeros([clsfier.nclass]*2, np.int64)
+		    confusion_classes[clsn] = clsfier.classes
+		makedir[clsn] = clsn
+	else:
+	    makedir = {'noclassifier':'noclassifier'}
 
-for _, mkd in makedir.items():
-    if not os.path.exists(os.path.join(self.results_dir, 'testing_long', mkd)):
-        os.makedirs(os.path.join(self.results_dir, 'testing_long', mkd))
+	for _, mkd in makedir.items():
+	    if not os.path.exists(os.path.join(self.results_dir, 'testing_long', mkd)):
+		os.makedirs(os.path.join(self.results_dir, 'testing_long', mkd))
 
-for clsn in list(self.classifier.keys()):
-    self.mts_metrics[clsn].reset()
-    self.glob_mts_metrics[clsn].reset()
+	for clsn in list(self.classifier.keys()):
+	    self.mts_metrics[clsn].reset()
+	    self.glob_mts_metrics[clsn].reset()
 
-if self.add_centercount:
-    for clsn in list(self.classifier.keys()):
-        self.center_counter_pio[clsn].reset()
-        self.glob_center_counter_pio[clsn].reset()
+	if self.add_centercount:
+	    for clsn in list(self.classifier.keys()):
+		self.center_counter_pio[clsn].reset()
+		self.glob_center_counter_pio[clsn].reset()
 
-new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelGRU2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelNBeats2C_B4_M25_R0_QS_AR_PF_FL']
-    old_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
-                'modelGRU2C_B4_M25_R0_QS_AR_PF_FL']
-    new_dirs = ['IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS']
-    old_dirs = ['IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS',
-                'IB-MTS']
-namecolor_legends = [('ib-mts',('b',1)),
-                     ('lstm',('c',.5)),
-                     ('ib-lstm',('g',.5)),
-                     ('gru',('m',.5)),
-                     ('ib-gru',('r',.5)),
-                     ('nbeats',('y',.5))]
-updates = [False] + [True]*(len(new_mods)-1)
-n_mod = len(new_mods)
-axes = None
-res = {}
-for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enumerate(zip(
-        new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates)):
-    self.results_dir = os.path.normpath(
-            self.results_dir).replace(
-                os.path.normpath(old_dir), 
-                os.path.normpath(new_dir)).replace(
-                    os.path.normpath(old_mod), 
-                    os.path.normpath(new_mod))
-    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results"
-    print('imported data from {}'.format(self.results_dir))
-    
-    results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
-    try:
-        mean_abs_err[ds] = results['mean_abs_err']
-        mean_rel_err[ds] = results['mean_rel_err']
-        abs_length[ds] = results['abs_length']
-        rel_length[ds] = results['rel_length']
-        psnrs_df = results['psnrs_df'].all()['df']
-        ssims_df = results['ssims_df'].all()['df']
-        kcenters_df = results['kcenters_df'].all()
-        for clsn in list(self.classifier.keys()):
-            mts_results[clsn][ds] = results['mts_results'].all()[clsn]
-            glob_mts_results[clsn][ds] = results['glob_mts_results'].all()[clsn]
-        
-        if self.add_classifier:
-            for clsn in list(self.classifier.keys()):
-                class_count_in[clsn][ds] = results['class_count_in'].all()[clsn]
-                class_results_in[clsn][ds] = results['class_results_in'].all()[clsn]
-                class_count_out[clsn][ds] = results['class_count_out'].all()[clsn]
-                class_results_out[clsn][ds] = results['class_results_out'].all()[clsn]
-                class_acc[clsn][ds] = results['class_acc'].all()[clsn]
-                class_IOchange[clsn][ds] = results['class_IOchange'].all()[clsn]
-                class_TIchange[clsn][ds] = results['class_TIchange'].all()[clsn]
-                class_TOchange[clsn][ds] = results['class_TOchange'].all()[clsn]
-                confusion_classes[clsn] = results['confusion_classes'].all()[clsn]
-        if self.add_centercount:
-            for clsn in list(self.classifier.keys()):
-                pio_centers[clsn][ds] = results['pio_centers'].all()[clsn]
-                globpio_centers[clsn][ds] = results['globpio_centers'].all()[clsn]
-    except:
-        if 'end' in results.keys():
-            end_raw = results['end']
-        else:
-            end_raw = False
-        assert end_raw, "the test savings were not terminated"
-        last_raw_saving = results['last_raw_saving']
-        print("loading previous raw results: last saved index is {}".format(last_raw_saving))
-        mean_abs_err[ds] = results['mean_abs_err']
-        mean_rel_err[ds] = results['mean_rel_err']
-        abs_length[ds] = results['abs_length']
-        rel_length[ds] = results['rel_length']
-        psnrs_df = results['psnrs_df'].all()['df']
-        ssims_df = results['ssims_df'].all()['df']
-        kcenters_df = results['kcenters_df'].all()
-        
-        if self.add_classifier:
-            np_metrics_insave = results['np_metrics_insave'].all()
-            np_metrics_outsave = results['np_metrics_outsave'].all()
-            atc_metric_save = results['atc_metric_save'].all()
-            for clsn in list(self.classifier.keys()):
-                for metric in np_metrics_in[clsn]:
-                    metric.total = np_metrics_insave[clsn][
-                        metric.name]['total']
-                    metric.count = np_metrics_insave[clsn][
-                        metric.name]['count']
-                for metric in np_metrics_out[clsn]:
-                    metric.total = np_metrics_outsave[clsn][
-                        metric.name]['total']
-                    metric.count = np_metrics_outsave[clsn][
-                        metric.name]['count']
-                self.atc_metric[clsn].count = atc_metric_save[clsn]['count']
-                class_IOchange[clsn][ds] = results['class_IOchange'].all()[clsn]
-                class_TIchange[clsn][ds] = results['class_TIchange'].all()[clsn]
-                class_TOchange[clsn][ds] = results['class_TOchange'].all()[clsn]
-                confusion_classes[clsn] = results['confusion_classes'].all()[clsn]
-               
-        for clsn in list(self.classifier.keys()):
-            for mn, sn in zip(
-                    [self.mts_metrics, 
-                     self.glob_mts_metrics],
-                    ['mts_metrics_save',
-                     'globmts_metrics_save']):
-                metrics_save = results[sn].all()
-                for nm,vm in mn[clsn].metrics_dict.items():
-                    vm.from_saved(metrics_save[clsn][nm])
-        
-        if self.add_centercount:
-            for nm, sn in zip(
-                    [self.center_counter_pio, 
-                     self.glob_center_counter_pio],
-                    ['pio_metrics_save',
-                     'globpio_metrics_save']):
-                metrics_save = results[sn].all()
-                for clsn in list(self.classifier.keys()):
-                    nm[clsn].freqdict_prior.total = metrics_save[
-                            clsn]['prior']['total']
-                    nm[clsn].freqdict_prior.count = metrics_save[
-                            clsn]['prior']['count']
-                    nm[clsn].freqdict_io.total = metrics_save[
-                            clsn]['io']['total']
-                    nm[clsn].freqdict_io.count = metrics_save[
-                            clsn]['io']['count']
-                    nm[clsn].batchinfo_pio.total = metrics_save[
-                            clsn]['pio']['total']
-                    nm[clsn].batchinfo_pio.count = metrics_save[
-                            clsn]['pio']['count']
-        if self.add_classifier:
-            # Collect results
-            for clsn in list(self.classifier.keys()):
-                class_results_in[clsn][ds] = {metric.name:metric.result() for metric in np_metrics_in[clsn]}
-                class_count_in[clsn][ds] = {metric.name:metric.count for metric in np_metrics_in[clsn]}
-                print('Classifier metrics IN:\n', class_results_in[clsn][ds])
-                class_results_out[clsn][ds] = {metric.name:metric.result() for metric in np_metrics_out[clsn]}
-                class_count_out[clsn][ds] = {metric.name:metric.count for metric in np_metrics_out[clsn]}
-                print('Classifier metrics OUT:\n', class_results_out[clsn][ds])
-                class_acc[clsn][ds] = self.atc_metric[clsn].results()
-        else:
+	new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelGRU2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelNBeats2C_B4_M25_R0_QS_AR_PF_FL']
+	old_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
+		    'modelGRU2C_B4_M25_R0_QS_AR_PF_FL']
+	new_dirs = ['IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS']
+	old_dirs = ['IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS',
+		    'IB-MTS']
+	namecolor_legends = [('ib-mts',('b',1)),
+			     ('lstm',('c',.5)),
+			     ('ib-lstm',('g',.5)),
+			     ('gru',('m',.5)),
+			     ('ib-gru',('r',.5)),
+			     ('nbeats',('y',.5))]
+	updates = [False] + [True]*(len(new_mods)-1)
+	n_mod = len(new_mods)
+	axes = None
+	res = {}
+	for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enumerate(zip(
+		new_mods, old_mods, new_dirs, old_dirs, namecolor_legends, updates)):
+	    self.results_dir = os.path.normpath(
+		    self.results_dir).replace(
+			os.path.normpath(old_dir), 
+			os.path.normpath(new_dir)).replace(
+			    os.path.normpath(old_mod), 
+			    os.path.normpath(new_mod))
+	    assert os.path.isfile(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds))), "Could not find first set of results {}".format(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)))
+	    print('imported data from {}'.format(self.results_dir))
+
+	    results = np.load(os.path.join(self.results_dir, 'test_RAW_{}.npz'.format(ds)), allow_pickle = True)
+	    try:
+		mean_abs_err[ds] = results['mean_abs_err']
+		mean_rel_err[ds] = results['mean_rel_err']
+		abs_length[ds] = results['abs_length']
+		rel_length[ds] = results['rel_length']
+		psnrs_df = results['psnrs_df'].all()['df']
+		ssims_df = results['ssims_df'].all()['df']
+		kcenters_df = results['kcenters_df'].all()
+		for clsn in list(self.classifier.keys()):
+		    mts_results[clsn][ds] = results['mts_results'].all()[clsn]
+		    glob_mts_results[clsn][ds] = results['glob_mts_results'].all()[clsn]
+
+		if self.add_classifier:
+		    for clsn in list(self.classifier.keys()):
+			class_count_in[clsn][ds] = results['class_count_in'].all()[clsn]
+			class_results_in[clsn][ds] = results['class_results_in'].all()[clsn]
+			class_count_out[clsn][ds] = results['class_count_out'].all()[clsn]
+			class_results_out[clsn][ds] = results['class_results_out'].all()[clsn]
+			class_acc[clsn][ds] = results['class_acc'].all()[clsn]
+			class_IOchange[clsn][ds] = results['class_IOchange'].all()[clsn]
+			class_TIchange[clsn][ds] = results['class_TIchange'].all()[clsn]
+			class_TOchange[clsn][ds] = results['class_TOchange'].all()[clsn]
+			confusion_classes[clsn] = results['confusion_classes'].all()[clsn]
+		if self.add_centercount:
+		    for clsn in list(self.classifier.keys()):
+			pio_centers[clsn][ds] = results['pio_centers'].all()[clsn]
+			globpio_centers[clsn][ds] = results['globpio_centers'].all()[clsn]
+	    except:
+		if 'end' in results.keys():
+		    end_raw = results['end']
+		else:
+		    end_raw = False
+		assert end_raw, "the test savings were not terminated"
+		last_raw_saving = results['last_raw_saving']
+		print("loading previous raw results: last saved index is {}".format(last_raw_saving))
+		mean_abs_err[ds] = results['mean_abs_err']
+		mean_rel_err[ds] = results['mean_rel_err']
+		abs_length[ds] = results['abs_length']
+		rel_length[ds] = results['rel_length']
+		psnrs_df = results['psnrs_df'].all()['df']
+		ssims_df = results['ssims_df'].all()['df']
+		kcenters_df = results['kcenters_df'].all()
+
+		if self.add_classifier:
+		    np_metrics_insave = results['np_metrics_insave'].all()
+		    np_metrics_outsave = results['np_metrics_outsave'].all()
+		    atc_metric_save = results['atc_metric_save'].all()
+		    for clsn in list(self.classifier.keys()):
+			for metric in np_metrics_in[clsn]:
+			    metric.total = np_metrics_insave[clsn][
+				metric.name]['total']
+			    metric.count = np_metrics_insave[clsn][
+				metric.name]['count']
+			for metric in np_metrics_out[clsn]:
+			    metric.total = np_metrics_outsave[clsn][
+				metric.name]['total']
+			    metric.count = np_metrics_outsave[clsn][
+				metric.name]['count']
+			self.atc_metric[clsn].count = atc_metric_save[clsn]['count']
+			class_IOchange[clsn][ds] = results['class_IOchange'].all()[clsn]
+			class_TIchange[clsn][ds] = results['class_TIchange'].all()[clsn]
+			class_TOchange[clsn][ds] = results['class_TOchange'].all()[clsn]
+			confusion_classes[clsn] = results['confusion_classes'].all()[clsn]
+
+		for clsn in list(self.classifier.keys()):
+		    for mn, sn in zip(
+			    [self.mts_metrics, 
+			     self.glob_mts_metrics],
+			    ['mts_metrics_save',
+			     'globmts_metrics_save']):
+			metrics_save = results[sn].all()
+			for nm,vm in mn[clsn].metrics_dict.items():
+			    vm.from_saved(metrics_save[clsn][nm])
+
+		if self.add_centercount:
+		    for nm, sn in zip(
+			    [self.center_counter_pio, 
+			     self.glob_center_counter_pio],
+			    ['pio_metrics_save',
+			     'globpio_metrics_save']):
+			metrics_save = results[sn].all()
+			for clsn in list(self.classifier.keys()):
+			    nm[clsn].freqdict_prior.total = metrics_save[
+				    clsn]['prior']['total']
+			    nm[clsn].freqdict_prior.count = metrics_save[
+				    clsn]['prior']['count']
+			    nm[clsn].freqdict_io.total = metrics_save[
+				    clsn]['io']['total']
+			    nm[clsn].freqdict_io.count = metrics_save[
+				    clsn]['io']['count']
+			    nm[clsn].batchinfo_pio.total = metrics_save[
+				    clsn]['pio']['total']
+			    nm[clsn].batchinfo_pio.count = metrics_save[
+				    clsn]['pio']['count']
+		if self.add_classifier:
+		    # Collect results
+		    for clsn in list(self.classifier.keys()):
+			class_results_in[clsn][ds] = {metric.name:metric.result() for metric in np_metrics_in[clsn]}
+			class_count_in[clsn][ds] = {metric.name:metric.count for metric in np_metrics_in[clsn]}
+			print('Classifier metrics IN:\n', class_results_in[clsn][ds])
+			class_results_out[clsn][ds] = {metric.name:metric.result() for metric in np_metrics_out[clsn]}
+			class_count_out[clsn][ds] = {metric.name:metric.count for metric in np_metrics_out[clsn]}
+			print('Classifier metrics OUT:\n', class_results_out[clsn][ds])
+			class_acc[clsn][ds] = self.atc_metric[clsn].results()
+		else:
 		    class_results_in = {'noclassifier': None}
 		    class_count_in = {'noclassifier': None}
 		    class_results_out = {'noclassifier': None}
@@ -466,7 +466,6 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
 
 	    i_img = list(makedir.keys())[nclsfier]
 	    stride = int(self.label_length*(self.mask_ratio))
-	    save_name='compare_mts_results.npz'
 
 	    res[new_mod] = {}
 	    if self.add_centercount:
@@ -492,8 +491,8 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
 			    'tss': tss['glob'],
 			    'hss': hss['glob']
 			    }
-    print(res)
-    np.savez(FLAGS.fname, res=res)
+	print(res)
+	np.savez(FLAGS.fname, res=res)
 
 if __name__ == '__main__':
     app.run(main)
