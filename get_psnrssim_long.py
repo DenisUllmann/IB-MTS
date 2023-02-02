@@ -10,7 +10,7 @@ from absl import flags
 from absl import logging
 
 FLAGS = flags.FLAGS
-flags.DEFINE_string("fname", 'psnr_ssim_long.npz', "File name: path with name of the file to read")
+flags.DEFINE_string("fname", 'compare_cvnn_long.npz', "File name: path with name of the file to read")
 
 def main():
     res = np.load(FLAGS.fname, allow_pickle=True)
