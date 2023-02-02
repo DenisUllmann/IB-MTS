@@ -67,11 +67,9 @@ else:
 now = datetime.datetime.now
 plt.rcParams.update({'font.size': 55})
 plt.rcParams.update({'font.family': 'Cambria'})
-manual_mode = True
 ds = 'TE'
 label = 'QS'
 nclsfier = 0
-fname = 'compare_act'
 
 # name of the features studied and type of the label ticks for the graphs
 feat_legends = [('intensity','%.1f'),
@@ -108,6 +106,7 @@ classes_and_inclusions_addnoclass = list(zip(
 
 FLAGS = flags.FLAGS
 
+flags.DEFINE_string("fname", 'compare_act', "File name: path with name of the output file")
 flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
 flags.DEFINE_boolean("change_traindata", True, "whether to enable to save/overwrite data_longformat.npz")
 flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
@@ -499,7 +498,7 @@ def main():
                 'TSS': th[0][lbl],
                 'HSS': th[1][lbl]} for lbl in th[0].keys()}
 
-    np.savez(fname, res=res)
+    np.savez(FLAGS.fname, res=res)
         # bbox_inches='tight')
     plt.close()
 
