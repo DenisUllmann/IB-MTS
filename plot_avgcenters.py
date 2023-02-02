@@ -67,7 +67,6 @@ else:
 now = datetime.datetime.now
 plt.rcParams.update({'font.size': 44})
 plt.rcParams.update({'font.family': 'Cambria'})
-manual_mode = True
 ds = 'TE'
 label = 'QS'
 nclsfier = 0
@@ -107,6 +106,7 @@ classes_and_inclusions_addnoclass = list(zip(
 
 FLAGS = flags.FLAGS
 
+flags.DEFINE_string("fname", 'compare_centers', "File name: path with name of the output file")
 flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
 flags.DEFINE_boolean("change_traindata", True, "whether to enable to save/overwrite data_longformat.npz")
 flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
@@ -526,7 +526,8 @@ def main():
              'cond_1_2_3': lambda fig, parms, pio_results, extract_key: self.plot_by_1_2_3(
                  fig, parms, pio_results, extract_key, label)},
             save_name_samptimedist)
-
+        
+        fname = os.path.join(os.path.split(FLAGS.fname)[0],fname)
         print('save fig at {}'.format(fname))
         self.savefig_autodpi(fname,
             bbox_inches=None)
