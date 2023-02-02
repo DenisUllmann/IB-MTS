@@ -481,7 +481,6 @@ def main():
         meta=None
         glob=None
         glob_meta=None
-        save_name='compare_mts_results.npz'
 
         res[new_mod] = {}
         if self.add_centercount:
