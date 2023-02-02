@@ -269,30 +269,30 @@ if self.add_centercount:
         self.center_counter_pio[clsn].reset()
         self.glob_center_counter_pio[clsn].reset()
 
-new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL-V3',
-            'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelGRU2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelNBeats2C_B4_M25_R0_QS_AR_PF_FL']
-old_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelMghk2C_B4_M25_R0_QS_AR_PF_FL-V3',
-            'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
-            'modelGRU2C_B4_M25_R0_QS_AR_PF_FL']
-new_dirs = ['IRIS_predspectra_intermediate_new',
-            'IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_tf2',
-            'HPC/Yggdrasil/IRIS_predspectra_intermediate_tf2']
-old_dirs = ['IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_new',
-            'IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_tf2',
-            'IRIS_predspectra_intermediate_tf2',
-            'ML/IRIS_predspectra_intermediate_tf2']
+new_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelGRU2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelNBeats2C_B4_M25_R0_QS_AR_PF_FL']
+    old_mods = ['modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelMghk2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelLSTMS2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelLSTM2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelGRUS2C_B4_M25_R0_QS_AR_PF_FL',
+                'modelGRU2C_B4_M25_R0_QS_AR_PF_FL']
+    new_dirs = ['IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS']
+    old_dirs = ['IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS',
+                'IB-MTS']
 namecolor_legends = [('ib-mts',('b',1)),
                      ('lstm',('c',.5)),
                      ('ib-lstm',('g',.5)),
@@ -493,7 +493,7 @@ for i_mod, (new_mod, old_mod, new_dir, old_dir, namecolor_legend, update) in enu
 			    'hss': hss['glob']
 			    }
     print(res)
-    np.savez(fname, res=res)
+    np.savez(FLAGS.fname, res=res)
 
 if __name__ == '__main__':
     app.run(main)
