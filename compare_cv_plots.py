@@ -67,12 +67,9 @@ else:
 now = datetime.datetime.now
 plt.rcParams.update({'font.size': 66})
 plt.rcParams.update({'font.family': 'Cambria'})
-manual_mode = True
 ds = 'TE'
 label = 'QS'
 nclsfier = 0
-fname = 'compare_cv_nn.pdf'
-out_img = True
 
 # name of the features studied and type of the label ticks for the graphs
 feat_legends = [('intensity','%.1f'),
@@ -109,8 +106,10 @@ classes_and_inclusions_addnoclass = list(zip(
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
-flags.DEFINE_boolean("change_traindata", True, "whether to enable to save/overwrite data_longformat.npz")
+flags.DEFINE_boolean("out_img", True, "Output an image?")
+flags.DEFINE_string("fname", 'compare_cv_nn.pdf', "File name: path with name of the output file")
+flags.DEFINE_boolean("manual_mode", True, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
+flags.DEFINE_boolean("change_traindata", False, "whether to enable to save/overwrite data_longformat.npz")
 flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
 flags.DEFINE_boolean("with_centerloss", False, "whether to add a term in the total loss optimizing the proximity to the centers")
 flags.DEFINE_boolean("debug", True, "True to use debug mode (1 epoch and 1st item of generator for test)")
@@ -593,10 +592,10 @@ def main():
                         **{nnn:[means_kcenter[ds][innn+1]] for innn,nnn in enumerate(['{}-NN'.format(k) for k in range(1,7)])}}
 
     if out_img:
-        self.savefig_autodpi(fname,
+        self.savefig_autodpi(FLAGS.fname,
             bbox_inches=None)
             # bbox_inches='tight')
-    np.savez('psnr_ssim', res = res)
+    np.savez('.'.join(FLAGS.fname.split('.')[:-1]), res = res)
     plt.close()
 
 if __name__ == '__main__':
