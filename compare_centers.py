@@ -508,7 +508,7 @@ def main():
                         'hss': hss['glob']
                         }
     print(res)
-    np.savez(fname, res=res)
+    np.savez(FLAGS.fname, res=res)
 
 if __name__ == '__main__':
     app.run(main)
