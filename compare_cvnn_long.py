@@ -623,7 +623,10 @@ def main():
 	    self.savefig_autodpi(FLAGS.fname,
 		bbox_inches=None)
 		# bbox_inches='tight')
-	np.savez('psnr_ssim_long', res = res)
+	np.savez('.'.join(FLAGS.fname.split('.')[:-1]), res = res)
 	plt.close()
 
 	plt.rcParams.update({'font.size': int(previous_font_size)})
+
+if __name__ == '__main__':
+    app.run(main)
