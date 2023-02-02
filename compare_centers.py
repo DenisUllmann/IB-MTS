@@ -108,8 +108,8 @@ classes_and_inclusions_addnoclass = list(zip(
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string("fname", 'compare_centers', "File name: path with name of the output file")
-flags.DEFINE_boolean("manual_mode", False, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
-flags.DEFINE_boolean("change_traindata", True, "whether to enable to save/overwrite data_longformat.npz")
+flags.DEFINE_boolean("manual_mode", True, "Use manual mode is you don't want to load dataand disable part of the code in models.py")
+flags.DEFINE_boolean("change_traindata", False, "whether to enable to save/overwrite data_longformat.npz")
 flags.DEFINE_string("model_type", "IBMTS", "name of the model to user ['IBMTS'], ['LSTM'], ['LSTMS'], ['GRU'], ['GRUS'], ['NBeats']")
 flags.DEFINE_boolean("with_centerloss", False, "whether to add a term in the total loss optimizing the proximity to the centers")
 flags.DEFINE_boolean("debug", True, "True to use debug mode (1 epoch and 1st item of generator for test)")
