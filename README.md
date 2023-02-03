@@ -38,6 +38,10 @@ Different concurrent models are evaluated and their codes are present in the rep
 
 ## Requirements
 
+Check your available memory, used and downloaded datasets may be significantly big.
+
+You harware and software should be TensorFlow2-friendly (see requirements at [TF installation](https://www.tensorflow.org/install))
+
 You may create a virtual environnement and use `requirements.txt`:
 
 ```
