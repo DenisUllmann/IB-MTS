@@ -50,10 +50,16 @@ $ pip install -r requirements.txt
 
 ## Install
 
-Use git to clone this repository into your computer.
+Use Git to clone this repository into your computer.
 
 ```
 git clone https://github.com/DenisUllmann/IB-MTS
+```
+
+Or pip install from Git:
+
+```
+pip install git+https://github.com/DenisUllmann/IB-MTS
 ```
 
 ## Download data
@@ -70,6 +76,13 @@ To skip the preprocessing part, you may download the preprocessed data instead:
 * AL data available at [Add](add)
 * PB data available at [Add](add)
 
+You can run `download_data.py` script:
+
+```
+$ python download_data.py --data=<data name>
+```
+
+where `<data name>` is `iris`, `al` or `pb`. 
 
 ## Download weights
 
