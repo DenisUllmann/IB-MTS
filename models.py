@@ -393,7 +393,7 @@ class SP_PCUNet(object):
         if inference_only:
             vgg_weights = None
         else:
-            vgg_weights = 'D:/ML savings/IRIS_predspectra/data/logs/pytorch_to_keras_vgg16.h5'
+            vgg_weights = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vgg', 'pytorch_to_keras_vgg16.h5')
         
         # Instantiate the model
         if self.model_type == 'IBMTS':
