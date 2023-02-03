@@ -21,6 +21,9 @@ class CategoricalLookup(object):
         self.keys_tensor = list(self.class_dict.keys())
         self.idx_tensor = tf.constant(np.arange(len(self.keys_tensor)))
         self.vals_tensor = tf.stack([self.class_dict[k] for k in self.keys_tensor],)
+        #TODO comment out next 2 lines if you don't use weights from Zenodo on IRIS data
+        if set(self.keys_tensor)=={'QS','AR','PF','FL'}:
+            self.keys_tensor=[[v,'FL'][v=='PF'] for v in self.keys_tensor]
         self.keys_tensor = tf.constant(self.keys_tensor)
         self.table = tf.lookup.StaticHashTable(
             tf.lookup.KeyValueTensorInitializer(
@@ -44,6 +47,9 @@ class CategoricalNPLookdown(object):
         self.class_dict = class_dict
         self.keys_tensor = list(self.class_dict.keys())
         self.vals_tensor = np.vstack([self.class_dict[k] for k in self.keys_tensor],)
+        #TODO comment out next 2 lines if you don't use weights from Zenodo on IRIS data
+        if set(self.keys_tensor)=={'QS','AR','PF','FL'}:
+            self.keys_tensor=[[v,'FL'][v=='PF'] for v in self.keys_tensor]
         self.keys_tensor = np.asarray(self.keys_tensor)
     
     def aprox_zeros(self, a):
