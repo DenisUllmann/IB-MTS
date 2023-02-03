@@ -78,6 +78,9 @@ class SP_Conv_Dense(object):
         # dict for classification {train_label: class vector[0 true,1 false,..]}
         # class vector has length nclass
         # true when train_label is in corresponding class from classes (class_inclusions included)
+        #TODO comment out the next 2 lines if you don't use weights fron Zenodo for IRIS data
+        if set(self.classes) == ['QS','AR','FL']:
+               self.classes = ['QS','AR','PF','FL']
         self.class_dict = {k: [int(k in c or c+'>'+k in self.class_inclusions) for c in self.classes] for k in self.labels}
         # if self.nolabel is not None:
         #     self.class_dict = {
