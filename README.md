@@ -86,7 +86,7 @@ where `<data name>` is `iris`, `al` or `pb`.
 
 Ensure that `<data dir>` and `dataset_address=<data name>_data` parameter of other python files are the same: by default, `<data dir>=dataset_address=<data name>_data`.
 
-Parameter `--prpr` is for preprocessed data, use `--noprpr` if you want to download raw data
+Parameter `--prpr` is for preprocessed data, use `--noprpr` if you want to download raw data.
 
 ## Download weights
 
