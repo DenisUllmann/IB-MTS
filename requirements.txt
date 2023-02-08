@@ -5,3 +5,4 @@ seaborn==0.12.0
 tensorflow==2.10.0
 irisreader==0.3.2
 nbeats-keras==1.7.0
+zenodo_get==1.3.4
