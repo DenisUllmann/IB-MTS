@@ -137,8 +137,6 @@ class SP_PCUNet(object):
         self.coef_diff = 5
         self.feat_legends = feat_legends
         self.all_labels = list(set(self.labels+self.test_labels))
-	manual_mode = True
-	change_traindata = True # whether to save/overwrite data_longformat.npz
         
         print('[%s - START] Creating the datasets..'%now().strftime('%d.%m.%Y - %H:%M:%S'))
         if self.dataset in ['iris_level_2C','iris_level_2B','al_2C','ld_2C','pb_2C']:
@@ -211,7 +209,7 @@ class SP_PCUNet(object):
         
         elif not(manual_mode):
             print("Loading previous dataset..")
-            data_info = np.load(os.path.join(self.checkpoint_dir, 'input_data','data_longformat.npz'), allow_pickle = True)
+            data_info = np.load(os.path.join(self.dataset_adress,'data_longformat.npz'), allow_pickle = True)
             keys = [k.replace('data_', '') for k in list(data_info.keys()) if 'data_' in k]
             self.data_pack = {k: (data_info['data_'+k], data_info['position_'+k]) for k in keys}
             data_info.close()
@@ -270,7 +268,7 @@ class SP_PCUNet(object):
             
             # if change_traindata:
             if True:
-                saveCompressed(open(os.path.join(self.checkpoint_dir, 'input_data','data_longformat.npz'), 'wb'),
+                saveCompressed(open(os.path.join(self.dataset_address,'data_longformat.npz'), 'wb'),
                          **{'data_'+u: v[0] for u,v in self.data_pack.items()},
                          **{'position_'+u: v[1] for u,v in self.data_pack.items()},
                          allow_pickle=True)
