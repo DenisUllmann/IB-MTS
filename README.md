@@ -79,10 +79,12 @@ To skip the preprocessing part, you may download the preprocessed data instead:
 You can run `download_data.py` script:
 
 ```
-$ python download_data.py --data=<data name>
+$ python download_data.py --data=<data name> --dir=<data dir>
 ```
 
-where `<data name>` is `iris`, `al` or `pb`. 
+where `<data name>` is `iris`, `al` or `pb`.
+
+Ensure that `<data dir>` and `dataset_address=<data name>_data` parameter of other python files are the same: by default, `<data dir>=dataset_address=<data name>_data`.
 
 ## Download weights
 
