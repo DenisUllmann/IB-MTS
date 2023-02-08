@@ -96,14 +96,14 @@ And weights of the Classifier of solar activities on IRIS data: [Add](add)
 
 ## Usage
 
-If you would like to preprocess the data and train the models, follow [From Scratch](#from-scratch).
-
 If you would like to directly test the models and skip the preprocessing and training part, follow [From pretrained models and preprocessed data](#From-pretrained-models-and-preprocessed-data).
 
-### From scratch
-
+If you would like to preprocess the data and train the models, follow [From Scratch](#from-scratch).
 
 ### From pretrained models and preprocessed data
+
+
+### From scratch
 
 
 ## Brief explanation
