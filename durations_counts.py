@@ -195,33 +195,20 @@ def main():
   self = SP_PCUNet(FLAGS, 
       classes_and_inclusions_addnoclass=classes_and_inclusions_addnoclass, 
       feat_legends=feat_legends, manual_mode=True, change_traindata=False)
-  self.dataset = 'iris_level_2C'
-  self.checkpoint_dir = 'C:/Users/Denis/HPC/Yggdrasil/iris_train_data'
-  self.label_length = 240
-  self.labels = ['QS', 'AR', 'PF', 'FL']
-  print("Load data from {}".format(os.path.join(self.checkpoint_dir,'data_longformat.npz')))
-  data_info = np.load(os.path.join(self.checkpoint_dir,'data_longformat.npz'), allow_pickle = True)
+  print("Load data from {}".format(os.path.join(self.dataset_address,'data_longformat.npz')))
+  data_info = np.load(os.path.join(self.dataset_address,'data_longformat.npz'), allow_pickle = True)
   keys = [k.replace('data_', '') for k in list(data_info.keys()) if 'data_' in k]
   self.data_pack = {k: (data_info['data_'+k], data_info['position_'+k]) for k in keys}
   data_info.close()
   change_traindata = False
 
   counts = {}
-  for k in ['TE_QS','TE_AR','TE_FL']:
+  for k in self.data_pack.keys() if 'TE_' in k:
       counts[k] = []
 
-  self.data_pack['TE_QS']
-  len(self.data_pack['TE_QS'])
-  self.data_pack['TE_QS'][0][0]
-  self.data_pack['TE_QS'][0][0].shape
-  self.data_pack['TE_QS'][1][0].shape
-  self.data_pack['TE_QS'][1][0]
-  self.data_pack['TE_QS'][1][0][0]
-  self.data_pack['TE_QS'][1][0][1]
-
-  for k in ['TE_QS', 'TE_AR', 'TE_FL']:
+  for k in self.data_pack.keys() if 'TE_' in k:
       for elem_pos in zip(*self.data_pack[k]):
-          counts['TE_%s'%elem_pos[1][1][:2]].append(elem_pos[0].shape[0]-int(240*.75))
+          counts['TE_%s'%elem_pos[1][1][:2]].append(elem_pos[0].shape[0]-int(self.label_length*(1-self.mask_ratio)))
 
   plt.figure(figsize=(5,1.6))
   for k in counts.keys():
