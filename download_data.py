@@ -22,10 +22,12 @@ def main():
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][0]], ['-o'], [FLAGS.dir])
     with py7zr.SevenZipFile("data_longformat.7z", 'r') as archive:
       archive.extractall(path=FLAGS.dir)
+    os.remove(os.path.join(write_dir, "data_longformat.7z"))
   else:
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][1]], ['-o'], [FLAGS.dir])
     with py7zr.SevenZipFile("data_raw.7z", 'r') as archive:
       archive.extractall(path=FLAGS.dir)
+    os.remove(os.path.join(write_dir, "data_longformat.7z"))
 
 if __name__ == '__main__':
   app.run(main)
