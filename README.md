@@ -90,11 +90,20 @@ Parameter `--prpr` is for preprocessed data, use `--noprpr` if you want to downl
 
 ## Download weights
 
-Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](10.5281/zenodo.7568871)
+Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats), of IRIS classifiers and for VGG16 layers used in the loss are availabel in `h5py` format and can be downloaded with `download_weights.py`:
 
-Weights for the VGG16 used in the loss are available
+```
+$ python download_weights.py
+```
 
-And weights of the Classifier of solar activities on IRIS data: [Add](add)
+Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](10.5281/zenodo.7568871) as a compressed .7z format.
+By default, they should be downloaded and unziped in the root directory of this project.
+
+Weights for the VGG16 used in the loss are available from an external [Google Drive source](https://drive.google.com/file/d/1HOzmKQFljTdKWftEP-kWD7p2paEaeHM0/view) as a `h5py` format.
+By default, they should be downloaded and unziped in the `vgg_weights` directory of this project.
+
+And weights of the Classifier of solar activities on IRIS data are available at [Zenodo](add) as a compressed .7z format.
+By default, they should be downloaded and unziped in the `classifiers` directory of this project.
 
 ## Usage
 
