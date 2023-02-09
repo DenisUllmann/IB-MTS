@@ -90,30 +90,30 @@ class SP_PCUNet(object):
         self.with_centerloss = config.with_centerloss
         self.epoch = config.epoch
         self.batch_size = config.batch_size
-        self.batch_norm = config.batch_norm
-        self.learning_rate_BN = config.learning_rate_BN
-        self.learning_rate_FINE = config.learning_rate_FINE
+        self.batch_norm = True
+        self.learning_rate_BN = config.learning_rate
+        self.learning_rate_FINE = self.learning_rate_BN/4
         self.dataset = config.dataset
         self.dataset_address = config.dataset_address
         self.train_ratio = config.train_ratio
         self.test_ratio = config.test_ratio
         self.label_length = config.label_length
-        self.mask_ratio = config.mask_ratio
-        self.random_ratio = config.random_ratio
+        self.mask_ratio = .25
+        self.random_ratio = False
         self.labels = config.labels
         self.labels = self.labels.split('_')
-        self.nolabel = config.nolabel
-        self.noclass = config.noclass
+        self.nolabel = None
+        self.noclass = None
         self.test_labels = config.test_labels
         self.test_labels = self.test_labels.split('_')
         self.name = config.name
         self.checkpoint_dir = config.checkpoint_dir
         self.logs_dir = config.logs_dir
         self.results_dir = config.results_dir
-        self.train1 = config.train1
-        self.train2 = config.train2
+        self.train1 = config.train
+        self.train2 = 100
         self.preload_train = config.preload_train
-        self.testload_FINE = config.testload_FINE
+        self.testload_FINE = True
         self.test = config.test
         self.test_ds = config.test_ds
         self.test_ds = self.test_ds.split('_')
@@ -440,13 +440,15 @@ class SP_PCUNet(object):
         else:
             learning_rate = self.learning_rate_FINE
         if inference_only:
-            print('io')
-            if self.testload_FINE:
+            try:
                 ckpt_name = max(glob(os.path.join(
                     checkpoint_dir,'BN'+str(self.learning_rate_BN)+'FINE'+str(self.learning_rate_FINE)+'*')), key = os.path.getctime)
-            else:
-                ckpt_name = max(glob(os.path.join(
-                    checkpoint_dir,'BN'+str(self.learning_rate_BN)+'w*')), key = os.path.getctime)
+            except:
+		try:
+		    ckpt_name = max(glob(os.path.join(
+			    checkpoint_dir,'BN'+str(self.learning_rate_BN)+'w*')), key = os.path.getctime)
+		except:
+		    assert False, "[*] Failed to find a checkpoint, train a model first"
             if ckpt_name:
                 print(" [*] Checkpoint found")
                 print(ckpt_name)
