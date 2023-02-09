@@ -38,7 +38,6 @@ def main():
       with py7zr.SevenZipFile(os.path.join(write_dir, "weights.7z"), 'r') as archive:
         archive.extractall(path=write_dir)
       os.remove(os.path.join(write_dir, "weights.7z"))
-    10.5281/zenodo.7568871
     if type_dwnl == 'goog_drive':
       gdown.download(address, write_dir, quiet=False)
 
