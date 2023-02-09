@@ -119,7 +119,7 @@ If you would like to preprocess the data and train the models, follow [From Scra
 To train an IBMTS model from scratch on iris data:
 
 ```
-$ python main.py --model_type=IBMTS --epoch=100 --dataset=iris_level_2C --dataset_address=iris_data --label_length=240 --labels=QS_AR_FL --train1 --nopreload_train --mask_ratio=0.25 --nopredict --notest
+$ python main.py --model_type=IBMTS --epoch=100 --dataset=iris_level_2C --dataset_address=iris_data --label_length=240 --labels=QS_AR_FL --train --preload_train --nopredict --notest
 ```
 
 `mode_type` can be `IBMTS`, `LSTMS` (simple LSTM), `LSTM` (named 'IB-LSTM' in the paper), `GRUS` (simple GRU), `GRU` (named 'IB-GRU' in the paper), `NBeats`.
@@ -144,10 +144,12 @@ For each 'IRIS', 'AL' or 'PB' evaluated in the paper, here are the corresponding
     label_length=325
     labels=PB
 
+For IRIS data, you must set `preload_train` parameter to `True` because data was already preprocessed. If you start with AL or PB data from scratch (without preprocessing), set `preload_train` to `False` and define the `train_ratio` and `test_ratio` parameters, or set `given_tvt` to `True` if you specified in file names which ones are for train/valid/test.
+
 To test your model, you can do it in the following way for iris data and IBMTS model:
 
 ```
-$ python main.py --model_type=IBMTS --dataset=iris_level_2C --label_length=240 --labels=QS_AR_FL --notrain --preload_train --nochange_traindata --test --mask_ratio=0.25 --test_ds=TE_TEL --add_classifier --add_centercount --nopredict
+$ python main.py --model_type=IBMTS --dataset=iris_level_2C --label_length=240 --labels=QS_AR_FL --preload_train --nochange_traindata --test --test_ds=TE_TEL --add_classifier --add_centercount --notrain --nopredict
 ```
 
 This may generate a lot of figures and data in the `npz` format. To compare models between then and generate figures present in the paper, follow [From pretrained models and preprocessed data](#From-pretrained-models-and-preprocessed-data).
