@@ -90,7 +90,7 @@ Parameter `--prpr` is for preprocessed data, use `--noprpr` if you want to downl
 
 ## Download weights
 
-Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats), of IRIS classifiers and for VGG16 layers used in the loss are availabel in `h5py` format and can be downloaded with `download_weights.py`:
+Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats), of IRIS classifiers and for VGG16 layers used in the loss are available in `h5py` format and can be downloaded with `download_weights.py`:
 
 ```
 $ python download_weights.py
