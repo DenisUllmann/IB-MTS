@@ -92,6 +92,8 @@ Parameter `--prpr` is for preprocessed data, use `--noprpr` if you want to downl
 
 Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](10.5281/zenodo.7568871)
 
+Weights for the VGG16 used in the loss are available
+
 And weights of the Classifier of solar activities on IRIS data: [Add](add)
 
 ## Usage
