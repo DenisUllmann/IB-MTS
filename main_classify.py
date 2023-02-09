@@ -53,9 +53,9 @@ flags.DEFINE_string("name", 'Classifier%s_B%i_M%i_R%i_%s--%s--partitionDt%s'%(
             self.dataset[-2:],  self.batch_size, int(100* self.mask_ratio), 
             int( self.random_ratio),  self.classes,  
             self.class_inclusions.replace('<','-'), not(self.fulldt_nopart)), "The name of the model")
-flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_adress, 'Classifiers', str( self.name),"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("logs_dir", os.path.join(FLAGS.root_adress, 'Classifiers', str( self.name),"log"), "Directory name to save the log [log]")
-flags.DEFINE_string("sample_dir", os.path.join(FLAGS.root_adress, 'Classifiers', str( self.name),"samples"), "Directory name to save the image samples [samples]")
+flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_adress, 'classifiers', str( self.name),"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("logs_dir", os.path.join(FLAGS.root_adress, 'classifiers', str( self.name),"log"), "Directory name to save the log [log]")
+flags.DEFINE_string("sample_dir", os.path.join(FLAGS.root_adress, 'classifiers', str( self.name),"samples"), "Directory name to save the image samples [samples]")
 flags.DEFINE_boolean("train1", True, "True for training phase 1 (with BN) [False]")
 flags.DEFINE_boolean("train2", True, "True for training phase 2 (without BN) : Fine-tuning [False]")
 flags.DEFINE_boolean("preload_train", False, "True for loading a pre-trained model before training, False for testing [False]")
