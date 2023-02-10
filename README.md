@@ -107,7 +107,14 @@ By default, they should be downloaded and unziped in the `classifiers` directory
 
 ## Download test results
 
+You can run `download_testres.py` script:
 
+```
+$ python download_testres.py
+```
+
+All test results are available at [Zenodo](add) as a compressed .7z format.
+By default, they should be downloaded and unziped from the root directory of this project.
 
 ## Usage
 
