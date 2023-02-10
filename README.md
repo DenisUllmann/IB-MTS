@@ -153,33 +153,50 @@ This may generate a lot of figures and data in the `npz` format: you can also do
 
 * Compare models
 
-To generate Table 2:
+To generate part of Table 2 and Figures 9, 10:
 
-To generate Figure 9:
+```
+$python compare_mts_plots.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+```
 
-To generate Figure 10:
+Default paths to model results must be modified in the py file.
 
-To generate Figure 11:
+To generate other part of Table 2 and Figures 11 and 13:
+
+```
+$python compare_mts_plots_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+```
+
+To generate part of Tables 3, 5 and Figures 14, 17:
+
+```
+$python compare_cv_plots.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_psnrssim.py --fname=<path for results>
+```
+
+To generate other part of Tables 3, 5 and Figures 15, 18:
+
+```
+$python compare_cvnn_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_psnrssim_long.py --fname=<path for results>
+```
 
 To generate Figure 12:
 
-To generate Table 3:
+```
+$python durations_counts.py
+```
 
-To generate Figure 13:
+To generate Figure 16 and Table 4:
 
-To generate Figure 14:
-
-To generate Figure 15:
-
-To generate Figure 16:
-
-To generate Table 4:
-
-To generate Table 5:
-
-To generate Figure 17:
-
-To generate Figure 18:
+```
+$python compare_centers.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_ib.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_ib_print.py --fname=<path for results>
+$python compare_centers_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_ib_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_ib_long_print.py --fname=<path for results>
+```
 
 To generate Table 6:
 
