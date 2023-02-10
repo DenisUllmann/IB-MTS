@@ -131,8 +131,8 @@ $ python main.py --model_type=IBMTS --dataset=iris_level_2C --label_length=240 -
 
 For each 'IRIS', 'AL' or 'PB' evaluated in the paper, here are the corresponding parameters:
 
-- IRIS data:<br/ >
-    dataset=iris_level_2C\
+- IRIS data:
+    + dataset=iris_level_2C\
     dataset_address=iris_data\
     label_length=240\
     labels=QS_AR_FL
