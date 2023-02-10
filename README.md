@@ -32,6 +32,7 @@ Different concurrent models are evaluated and their codes are present in the rep
 *   [Install](#install)
 *   [Download data](#download-data)
 *   [Download weights](#download-weights)
+*   [Download test results](#download-test-results)
 *   [Usage](#usage)
 *   [Brief explanation](#brief-explanation)
 *   [License](#license)
