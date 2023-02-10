@@ -224,10 +224,10 @@ $python compare_centers.py --fname=<path for results> --dataset=<data name> --la
 To generate Table 7:
 
 ```
-$python compare_centers.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
-$python get_accthss_class.py --fname=<path for results>
-$python compare_centers_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
-$python get_accthss_class_long.py --fname=<path for results>
+$python get_accthss_class.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python print_act.py --fname=<path for results>
+$python get_accthss_class_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python print_act_class_long.py --fname=<path for results>
 ```
 
 To generate Figure 20:
