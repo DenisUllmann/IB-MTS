@@ -261,7 +261,7 @@ This may generate a lot of figures and data in the `npz` format. To compare mode
 
 Complete explanation can be found in paper.
 
-![image](rdm_img/Evaluations.pdf)
+![alt text](rdm_img/Evaluations.pdf "Evaluations")
 
 
 ## License
