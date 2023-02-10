@@ -200,12 +200,34 @@ $python get_ib_long_print.py --fname=<path for results>
 
 To generate Table 6:
 
+```
+$python compare_centers.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_accthss_centers.py --fname=<path for results>
+$python compare_centers_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_accthss_centerslong.py --fname=<path for results>
+```
+
 To generate Figure 19:
+
+```
+$python compare_centers.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+```
 
 To generate Table 7:
 
+```
+$python compare_centers.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_accthss_class.py --fname=<path for results>
+$python compare_centers_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python get_accthss_class_long.py --fname=<path for results>
+```
+
 To generate Figure 20:
 
+```
+$python compare_feat_plots.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+$python compare_feat_long.py --fname=<path for results> --dataset=<data name> --label_length=<spatial length of data>
+```
 
 ### From scratch
 
