@@ -131,23 +131,23 @@ $ python main.py --model_type=IBMTS --dataset=iris_level_2C --label_length=240 -
 
 For each 'IRIS', 'AL' or 'PB' evaluated in the paper, here are the corresponding parameters:
 
-    + IRIS data:\
- >dataset=iris_level_2C\
- dataset_address=iris_data\
- label_length=240\
- labels=QS_AR_FL
++ IRIS data:
+>dataset=iris_level_2C\
+dataset_address=iris_data\
+label_length=240\
+labels=QS_AR_FL
 
-    + AL data:\
- >dataset=al_2C\
- dataset_address=al_data\
- label_length=137\
- labels=AL
+AL data:\
+>dataset=al_2C\
+dataset_address=al_data\
+label_length=137\
+labels=AL
 
-    + PB data:\
- >dataset=pb_2C\
- dataset_address=pb_data\
- label_length=325\
- labels=PB
+PB data:\
+>dataset=pb_2C\
+dataset_address=pb_data\
+label_length=325\
+labels=PB
 
 This may generate a lot of figures and data in the `npz` format: you can also download those results at Zenodo following [Download test results](#Download-test-results).
 
