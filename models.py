@@ -139,7 +139,7 @@ class SP_PCUNet(object):
         self.all_labels = list(set(self.labels+self.test_labels))
         
         print('[%s - START] Creating the datasets..'%now().strftime('%d.%m.%Y - %H:%M:%S'))
-        if self.dataset in ['iris_level_2C','iris_level_2B','al_2C','ld_2C','pb_2C']:
+        if self.dataset in ['iris','al','pb']:
             self.c_dim = 1
         if self.train1 and not(self.preload_train) and not(manual_mode):
             data, positions = create_labelines_timeseq_dataset(self.dataset_address, self.labels, self.label_length)
