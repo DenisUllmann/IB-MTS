@@ -36,7 +36,7 @@ flags.DEFINE_float("learning_rate_BN", 0.0002, "Learning rate of for adam with B
 flags.DEFINE_float("learning_rate_FINE", 0.00005, "Learning rate of for adam without BN (phase 2 - Fine tuning) [0.00005]")
 flags.DEFINE_string("dataset", "iris", "The name of dataset [iris, al, pb]")
 flags.define_string("root_address", os.path.dirname(os.path.abspath(__file__))), "Absolute path of the file")
-flags.DEFINE_string("dataset_address", os.path.join(FLAGS.root_adress, "iris data"), "The path of dataset")
+flags.DEFINE_string("dataset_address", os.path.join(FLAGS.root_address,'iris_data'), "The path of dataset")
 flags.DEFINE_float("train_ratio", 0.7, "ratio of dataset to use for training [0.7]")
 flags.DEFINE_float("test_ratio", 0.25, "ratio of dataset to use for testing [0.25]")
 flags.DEFINE_boolean("fulldt_nopart", True, "to not partition data and use it fully to train")
