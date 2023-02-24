@@ -69,13 +69,13 @@ Three datasets are used in the paper (preprocessed data available bellow):
 
 * IRIS data available at [LMSAL](https://iris.lmsal.com/)
 * AL data available at [NREL](https://www.nrel.gov/grid/solar-power-data.html)
-* PB data available at [CalTrans](https://pems.dot.ca.gov/) or [Zenodo](10.5281/zenodo.5724362)
+* PB data available at [CalTrans](https://pems.dot.ca.gov/) or [Zenodo](https://doi.org/10.5281/zenodo.5724362)
 
 To skip the preprocessing part, you may download the preprocessed data instead:
 
-* IRIS data available at [Zenodo](10.5281/zenodo.7524572)
-* AL data available at [Add](add)
-* PB data available at [Add](add)
+* IRIS preprocessed data (11.9GB) available at [Zenodo](https://doi.org/10.5281/zenodo.7524572)
+* AL preprocessed data (34.5MB) available at [Zenodo](https://doi.org/10.5281/zenodo.7674274)
+* PB preprocessed data (114.2MB) available at [Zenodo](https://doi.org/10.5281/zenodo.7674366)
 
 You can run `download_data.py` script:
 
