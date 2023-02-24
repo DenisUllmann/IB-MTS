@@ -120,7 +120,7 @@ class SP_Conv_Dense(object):
         
         if not(skip_data):
             print('[%s - START] Creating the datasets..'%now().strftime('%d.%m.%Y - %H:%M:%S'))
-            if self.dataset == 'iris_level_2C' or self.dataset == 'iris_level_2B':
+            if self.dataset == 'iris':
                 self.c_dim = 1
             if self.train1 and not(self.preload_train) and not(self.preload_data):
                 data, positions = create_labelines_timeseq_dataset(self.dataset_address, self.labels, self.label_length)
