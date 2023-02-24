@@ -9,7 +9,7 @@ FLAGS = flags.FLAGS
 
 vgg_weights_adress = 'https://drive.google.com/uc?id=1HOzmKQFljTdKWftEP-kWD7p2paEaeHM0'
 ts_predmodel_weights = '10.5281/zenodo.7568871'
-class_iris_weights = ''
+class_iris_weights = '10.5281/zenodo.7674521'
 
 addresses = [
 vgg_weights_adress,
