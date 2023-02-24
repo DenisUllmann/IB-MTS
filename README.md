@@ -114,7 +114,7 @@ You can run `download_testres.py` script:
 $ python download_testres.py
 ```
 
-All test results are available at [Zenodo](add) as a compressed .7z format.
+All test results are available at [Zenodo](https://doi.org/10.5281/zenodo.7674553) as a compressed .7z format (108MB).
 By default, they should be downloaded and unziped from the root directory of this project.
 
 ## Usage
