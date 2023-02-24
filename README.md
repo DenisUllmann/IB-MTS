@@ -97,13 +97,13 @@ Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats), 
 $ python download_weights.py
 ```
 
-Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](10.5281/zenodo.7568871) as a compressed .7z format (407.5MB).
+Weights of all forecasting models (IB-MTS, LSTM, IB-LSTM, GRU, IB-GRU, NBeats) are available at [Zenodo](https://doi.org/10.5281/zenodo.7568871) as a compressed .7z format (407.5MB).
 By default, they should be downloaded and unziped in the root directory of this project.
 
 Weights for the VGG16 used in the loss are available from an external [Google Drive source](https://drive.google.com/file/d/1HOzmKQFljTdKWftEP-kWD7p2paEaeHM0/view) as a `h5py` format (528MB).
 By default, they should be downloaded and unziped in the `vgg_weights` directory of this project.
 
-And weights of the Classifier of solar activities on IRIS data are available at [Zenodo](add) as a compressed .7z format.
+And weights of the Classifier of solar activities on IRIS data are available at [Zenodo](https://doi.org/10.5281/zenodo.7674521) as a compressed .7z format (46.3MB).
 By default, they should be downloaded and unziped in the `classifiers` directory of this project.
 
 ## Download test results
