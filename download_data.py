@@ -11,9 +11,9 @@ flags.DEFINE_string("dir", os.path.join(os.path.dirname(os.path.abspath(__file__
 flags.DEFINE_boolean("prpr", True, "Whether to download preprocessed data")
 
 dois = {
-  'iris': ('10.5281/zenodo.7524572',''), #key name: (preprocessed doi link, raw doi link)
-  'al': ('10.5281/zenodo.7674274',''),
-  'pb': ('10.5281/zenodo.7674366','')
+  'iris': ('10.5281/zenodo.7524572','unknown'), #key name: (preprocessed doi link, raw doi link)
+  'al': ('10.5281/zenodo.7674274','unknown'),
+  'pb': ('10.5281/zenodo.7674366','10.5281/zenodo.5724362')
   }
 
 def main():
@@ -21,6 +21,7 @@ def main():
   if FLAGS.prpr:
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][0]], ['-o'], [FLAGS.dir])
   else:
+    assert dois[FLAGS.data][1]!='unknown', "Unknown data position, download manually"
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][1]], ['-o'], [FLAGS.dir])
     with py7zr.SevenZipFile("data_raw.7z", 'r') as archive:
       archive.extractall(path=FLAGS.dir)
