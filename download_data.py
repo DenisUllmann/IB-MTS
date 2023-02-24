@@ -21,7 +21,7 @@ def main():
   if FLAGS.prpr:
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][0]], ['-o'], [FLAGS.dir])
   else:
-    assert dois[FLAGS.data][1]!='unknown', "Unknown data position, download manually"
+    assert dois[FLAGS.data][1]!='unknown', "Unknown data address, download manually"
     result = subprocess.run(['zenodo_get'], ['-d'], [dois[FLAGS.data][1]], ['-o'], [FLAGS.dir])
     with py7zr.SevenZipFile("data_raw.7z", 'r') as archive:
       archive.extractall(path=FLAGS.dir)
