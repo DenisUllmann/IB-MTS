@@ -57,7 +57,7 @@ flags.DEFINE_boolean("debug", False, "True to use debug mode (1 epoch and 1st it
 flags.DEFINE_integer("epoch", 100, "Epoch to train [25]")
 flags.DEFINE_integer("batch_size", 4, "The size of batch images [4]")
 flags.DEFINE_float("learning_rate_BN", 0.0002, "Learning rate of for adam with BN (phase 1) [0.0002]")
-flags.DEFINE_string("dataset", "iris_level_2C", "The name of dataset [iris_level_2C, al_2C, pb_2C]")
+flags.DEFINE_string("dataset", "iris", "The name of dataset [iris, al, pb]")
 flags.DEFINE_string("root_address", os.path.dirname(os.path.realpath(__file__)), "The path for the root folder of the project")
 flags.DEFINE_string("dataset_address", os.path.join(FLAGS.root_address,'iris_data'), "The path of dataset")
 flags.DEFINE_boolean("given_tvt", False, "Whether the data is already separated in 'train' 'valid' 'test' (these should appear in the file names)")
