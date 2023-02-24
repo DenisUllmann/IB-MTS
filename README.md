@@ -41,6 +41,8 @@ Different concurrent models are evaluated and their codes are present in the rep
 
 Check your available memory, used and downloaded datasets may be significantly big.
 
+Preprocessings, trainings, testings and figure generation were performed on a machine with more that free 15GB and CUDA capable GPUs with more than 10GB RAM each.
+
 You harware and software should be TensorFlow2-friendly (see requirements at [TF installation](https://www.tensorflow.org/install))
 
 You may create a virtual environnement and use `requirements.txt`:
