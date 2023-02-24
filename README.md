@@ -24,7 +24,8 @@ Different concurrent models are evaluated and their codes are present in the rep
 * [LSTM](https://doi.org/10.1162/neco.1997.9.8.1735), [GRU](
 https://doi.org/10.48550/arXiv.1409.1259)
 * IB-LSTM, IB-GRU that are made of 2 [LSTM](https://doi.org/10.1162/neco.1997.9.8.1735)s or [GRU](
-https://doi.org/10.48550/arXiv.1409.1259)s to encode and 2 LSTMs or GRUs to decode
+https://doi.org/10.48550/arXiv.1409.1259)s to encode and 2 [LSTM](https://doi.org/10.1162/neco.1997.9.8.1735)s or [GRU](
+https://doi.org/10.48550/arXiv.1409.1259)s to decode
 * [NBeats](https://arxiv.org/abs/1905.10437)
 
 
