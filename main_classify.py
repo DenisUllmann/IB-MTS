@@ -49,9 +49,9 @@ flags.DEFINE_string("classes", '_'.join(['QS']), "labels of classification ['QS'
 flags.DEFINE_string("noclass", None, "None or name for eventual events not sampling from 'classes' labels (will be assumed to output 0 values for the classifier)")
 flags.DEFINE_string("class_inclusions", '_'.join(['']), "inclusions for classification '_'.join(['QS<AR']) OR [QS<AR, QS<FL] OR ['']")
 flags.DEFINE_string("test_labels", '_'.join(['QS','AR','FL']), "label for testing ['QS','AR','FL']")
-flags.DEFINE_string("name", 'Classifier%s_B%i_M%i_R%i_%s--%s--partitionDt%s'%( 
-            self.dataset[-2:],  self.batch_size, int(100* self.mask_ratio), 
-            int( self.random_ratio),  self.classes,  
+flags.DEFINE_string("name", 'Classifier_M%i_%s--%s--partitionDt%s'%( 
+            int(100* self.mask_ratio), 
+            self.classes,  
             self.class_inclusions.replace('<','-'), not(self.fulldt_nopart)), "The name of the model")
 flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_adress, 'classifiers', str( self.name),"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("logs_dir", os.path.join(FLAGS.root_adress, 'classifiers', str( self.name),"log"), "Directory name to save the log [log]")
