@@ -68,7 +68,7 @@ if FLAGS.model_type == "NBeats":
     flags.DEFINE_integer("n_blocks", 2,"number of blocks for NBeats")
 flags.DEFINE_string("labels", '_'.join(['QS','AR','FL']), "label for training ['QS','AR','FL'] for IRIS, ['AL'] for AL (these should appear in the filename[:2])")
 flags.DEFINE_string("test_labels", '_'.join(['QS','AR','FL']), "label for testing ['QS','AR','FL']")
-flags.DEFINE_string("name", 'model%s%s_B%i_M%i_R%i_%s'%([FLAGS.model_type+"%s"%['','star'][int(FLAGS.with_centerloss)],"Mghk%s"%['','star'][int(FLAGS.with_centerloss)]][int(FLAGS.model_type=="IBMTS")], FLAGS.dataset[-2:], FLAGS.batch_size, int(100*FLAGS.mask_ratio), int(FLAGS.random_ratio), FLAGS.labels), "The name of the model")
+flags.DEFINE_string("name", 'model%s_M%i_%s'%(FLAGS.model_type+"%s"%['','star'][int(FLAGS.with_centerloss)], int(100*FLAGS.mask_ratio), FLAGS.labels), "The name of the model")
 flags.DEFINE_string("checkpoint_dir", os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"checkpoint"), "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("logs_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"log"), "Directory name to save the log [log]")
 flags.DEFINE_string("results_dir",  os.path.join(FLAGS.root_address,FLAGS.dataset,FLAGS.name,"results"), "Directory name to save the image samples [samples]")
